@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:text="公車路線查詢"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/busSearchButton" />
+
+    <Button
+        android:text="附近站牌查詢"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stationSearchButton" />
+
+    <Button
+        android:text="提醒列表"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarmListButton" />
+</LinearLayout>

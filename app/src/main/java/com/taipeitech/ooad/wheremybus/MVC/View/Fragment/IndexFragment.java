@@ -18,15 +18,64 @@ import com.taipeitech.ooad.wheremybus.R;
 
 public class IndexFragment extends Fragment {
     View view;
+    Button busSearch, stationSearch, alarmList;
+    View.OnClickListener indexClickListener;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_system_controller, container, false);
+        view = inflater.inflate(R.layout.index, container, false);
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        initView();
+        setIndexClickListener();
+        setViewListener();
+
+    }
+
+    private void setIndexClickListener() {
+        indexClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = null;
+                switch(v.getId()){
+                    case R.id.busSearchButton:
+                        fragment = new BusPageFragment();
+                        break;
+                    case R.id.stationSearchButton:
+                        fragment = new StationListFragment();
+                        break;
+                    case R.id.alarmListButton:
+                        fragment = new AlarmListFragment();
+                        break;
+                }
+                changeView(fragment);
+            }
+        };
+    }
+
+
+    public void changeView(Fragment fragment) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.fragment, fragment);
+        ft.addToBackStack("");
+        ft.commit();
+    }
+
+    private void setViewListener() {
+        busSearch.setOnClickListener(indexClickListener);
+        stationSearch.setOnClickListener(indexClickListener);
+        alarmList.setOnClickListener(indexClickListener);
+    }
+
+    private void initView() {
+        busSearch = (Button) view.findViewById(R.id.busSearchButton);
+        stationSearch = (Button) view.findViewById(R.id.stationSearchButton);
+        alarmList = (Button) view.findViewById(R.id.alarmListButton);
     }
 }
