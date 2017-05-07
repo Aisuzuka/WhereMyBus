@@ -3,6 +3,7 @@ package com.taipeitech.ooad.wheremybus.BusInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.Pair;
 
 import com.taipeitech.ooad.wheremybus.Tool.DownloadJSONFromURL;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
@@ -37,9 +38,10 @@ public class BusInformationController {
     private Map<Integer,String> busIdName=new HashMap<Integer, String>();
 
     public  BusInformationController(Handler handler){
-        timer.schedule(new MyTimerTask(), 0, 30000);
         this.handler=handler;
         timer = new Timer(true);
+        timer.schedule(new MyTimerTask(), 0, 30000);
+
     }
 
     private Map<String,Integer> busRouteToIdMap;
@@ -53,11 +55,9 @@ public class BusInformationController {
     private Map<String,BusStation> busStationMap;
 
 
-    private List<Integer> listenBusRoute =new ArrayList<>();
-    private Map<Integer,Handler> listenBusRouteHandler =new HashMap<>();
+    private List<Pair<Integer,Handler>> listenBusRoute =new ArrayList<>();
+    private List<Pair<String,Handler>> listenBusStation = new ArrayList<>();
 
-    private List<String> listenBusStation = new ArrayList<>();
-    private Map<Integer,Handler> listenBusStationHandler =new HashMap<>();
 
     JSONObject busStationData;
     private Map<Integer,List<BusEstimateTime>> busEstimateTimeByRouteMap =new HashMap<>();
@@ -196,12 +196,12 @@ public class BusInformationController {
                 List<BusEstimateTime> busEstimateTimeByRouteList = busEstimateTimeByRouteMap.get(listenBusRoute.get(j));
                 Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByRouteMap.get(listenBusRoute.get(j));
                 if (busEstimateTimeMap ==null){
-                    createEstimateTimeByRouteList(listenBusRoute.get(j));
+                    createEstimateTimeByRouteList(listenBusRoute.get(j).first);
                     busEstimateTimeMap = stopIdToBusEstimateTimeByRouteMap.get(listenBusRoute.get(j));
                     busEstimateTimeByRouteList = busEstimateTimeByRouteMap.get(listenBusRoute.get(j));
                 }
                 for(int i=0;i<busEstimateTimeList.length();i++){
-                    if(busEstimateTimeList.getJSONObject(i).getInt("RouteID")==listenBusRoute.get(j)){
+                    if(busEstimateTimeList.getJSONObject(i).getInt("RouteID")==listenBusRoute.get(j).first){
 
                         BusEstimateTime busEstimateTime =busEstimateTimeMap.get(busEstimateTimeList.getJSONObject(i).getInt("StopID"));
                         busEstimateTime.estimateTime =busEstimateTimeList.getJSONObject(i).getString("EstimateTime");
@@ -213,8 +213,8 @@ public class BusInformationController {
                         Log.d("BusEstimateTimeByRoute",busEstimateTime.busRoute.busRouteName+"   "+busEstimateTime.busStation.busStationName+"   "+busEstimateTime.estimateTime+"   "+busEstimateTime.goBack);
 
                 }
-
-                Message message =new Message();
+               Handler handler = listenBusRoute.get(j).second;
+                Message message;
                 message = handler.obtainMessage(1,(ArrayList<BusEstimateTime>)busEstimateTimeByRouteList);
                 handler.sendMessage(message);
 
@@ -225,7 +225,7 @@ public class BusInformationController {
                 List<BusEstimateTime> busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusRoute.get(j));
                 Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusRoute.get(j));
                 if (busEstimateTimeMap ==null){
-                    createEstimateTimeByStationList(listenBusStation.get(j));
+                    createEstimateTimeByStationList(listenBusStation.get(j).first);
                     busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusStation.get(j));
                     busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusStation.get(j));
                 }
@@ -240,6 +240,11 @@ public class BusInformationController {
                     BusEstimateTime busEstimateTime= busEstimateTimeByRouteList.get(i);
                     Log.d("BusEstimateTimeByRoute",busEstimateTime.busRoute.busRouteName+"   "+busEstimateTime.busStation.busStationName+"   "+busEstimateTime.estimateTime+"   "+busEstimateTime.goBack);
                 }
+                Handler handler = listenBusStation.get(j).second;
+                Message message;
+                message = handler.obtainMessage(1,(ArrayList<BusEstimateTime>)busEstimateTimeByRouteList);
+                handler.sendMessage(message);
+
             }
 
 
@@ -262,23 +267,33 @@ public class BusInformationController {
 
         }
     };
-    public void searchLineByName(String lineName){
-//        this.lineName=lineName;
- timer.schedule(new MyTimerTask(), 0, 30000);
-//        listenBusRoute.add(16111);
-//        listenBusStation.add("中華");
-    listenBusRoute.add(busRouteToIdMap.get(lineName));
+
+    public  void searchLineByName(String name ,Handler handler){
+        listenBusRoute.add(new Pair<Integer, Handler>(busRouteToIdMap.get(name),handler));
     }
 
     public void listenEstimateTimeByRoute(BusRoute busRoute,Handler handler){
-        listenBusRoute.add(busRoute.routeId);
+        listenBusRoute.add(new Pair<Integer, Handler>(busRoute.routeId,handler));
     }
     public void cancelListenByRoute(BusRoute busRoute,Handler handler){
-        listenBusRoute.add(busRoute.routeId);
+        for (int i=0;i<listenBusRoute.size();i++){
+            if(listenBusRoute.get(i).first==busRoute.routeId&&listenBusRoute.get(i).second==handler){
+                listenBusRoute.remove(i);
+                break;
+            }
+        }
     }
-    public void listenEstimateTimeByStation(BusStation busStation){
+    public void listenEstimateTimeByStation(BusStation busStation,Handler handler){
 
-        listenBusStation.add(busStation.busStationName);
+        listenBusStation.add(new Pair<String, Handler>(busStation.busStationName,handler));
+    }
+    public void cancelListenByStation(BusStation busStation,Handler handler){
+        for (int i=0;i<listenBusStation.size();i++){
+            if(listenBusStation.get(i).first.equals(busStation.busStationName)&&listenBusStation.get(i).second==handler){
+                listenBusStation.remove(i);
+                break;
+            }
+        }
     }
 
     public List<BusRoute> searchRouteByName(String busRouteName){

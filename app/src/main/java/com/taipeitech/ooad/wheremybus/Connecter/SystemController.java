@@ -27,6 +27,6 @@ public class SystemController {
     public static void getBusEstimateTime(Handler busLineHandler, String busLine) {
         if(busInformationController ==null)
         busInformationController =new BusInformationController(busLineHandler);
-        busInformationController.searchLineByName(busLine);
+        busInformationController.searchLineByName(busLine,busLineHandler);
     }
 }
