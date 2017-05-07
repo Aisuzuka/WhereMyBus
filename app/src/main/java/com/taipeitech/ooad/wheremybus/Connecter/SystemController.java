@@ -1,5 +1,7 @@
 package com.taipeitech.ooad.wheremybus.Connecter;
 
+import android.os.Handler;
+
 import com.taipeitech.ooad.wheremybus.Alarm.AlarmController;
 import com.taipeitech.ooad.wheremybus.BusInfo.BusInfoController;
 import com.taipeitech.ooad.wheremybus.RoutePlan.RoutePlanController;
@@ -20,4 +22,7 @@ public class SystemController {
         routePlanController = new RoutePlanController();
     }
 
+    public static void getBusEstimateTime(Handler busLineHandler, String busLine) {
+
+    }
 }
