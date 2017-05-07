@@ -17,7 +17,7 @@ import java.util.zip.GZIPInputStream;
  * Created by user on 2017/5/4.
  */
 public class DownloadJSONFromURL {
-    public JSONObject downloadURL(String httpURL){
+    public JSONObject downloadURL(String httpURL)throws IOException{
         JSONObject jsonObject =null;
                 try {
                     URL url = new URL(httpURL);
@@ -48,9 +48,7 @@ public class DownloadJSONFromURL {
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                }  catch (JSONException e) {
                     e.printStackTrace();
                 }finally {
 

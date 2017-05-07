@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.taipeitech.ooad.wheremybus.Connecter.SystemController;
 import com.taipeitech.ooad.wheremybus.MVC.Controller.MainActivity;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
+import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.View.Adapter.BusLineStationAdapter;
 import com.taipeitech.ooad.wheremybus.R;
 
@@ -97,7 +98,9 @@ public class BusLineStationFragment extends Fragment {
     }
 
     private void getBusEstimoteTime() {
-        SystemController.getBusEstimateTime(busEstimateTimeHandler, busLine);
+        BusRoute busRoute = new BusRoute();
+        busRoute.busRouteName = busLine;
+        SystemController.getBusEstimateTimeByRoute(busEstimateTimeHandler, busRoute);
     }
 
     private void clearAllListData() {

@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,22 +28,30 @@ import java.util.TimerTask;
 public class BusInformationController {
     private BusInformationController synchronizedLock  = this;
     public Timer timer;
-    public Handler handler;
-    private int lineId;
-    private String lineName;
-    private JSONObject busData =null;
-    private JSONObject stationData =null;
+    public Handler systemInitFinishHandler;
+    public Handler networkFailHandler;
 
 
+    //private Map<Integer,String> busIdName=new HashMap<Integer, String>();
 
-    private Map<Integer,String> busIdName=new HashMap<Integer, String>();
+    public  BusInformationController(){
 
-    public  BusInformationController(Handler handler){
-        this.handler=handler;
         timer = new Timer(true);
         timer.schedule(new MyTimerTask(), 0, 30000);
 
     }
+    public void setNetworkFailHandler(Handler handler){
+        this.networkFailHandler=handler;
+    }
+
+    public void setSystemInitFinishHandler(Handler handler){
+        this.systemInitFinishHandler=handler;
+        if(dataReady){
+            Message message =this.systemInitFinishHandler.obtainMessage(1,new String("DataReady"));
+            this.systemInitFinishHandler.sendMessage(message);
+        }
+    }
+
 
     private Map<String,Integer> busRouteToIdMap;
     private Map<String,Integer> busStationToIdMap;
@@ -65,6 +74,8 @@ public class BusInformationController {
 
     private Map<String,List<BusEstimateTime>> busEstimateTimeByStationMap =new HashMap<>();
     private Map<String,Map<Integer,BusEstimateTime>> stopIdToBusEstimateTimeByStationMap =new HashMap<>();
+
+    private boolean dataReady=false;
 
     public void createEstimateTimeByStationList(String busStation){
         List<BusEstimateTime> busEstimateTimeList = new ArrayList<>();
@@ -132,8 +143,22 @@ public class BusInformationController {
     }
 
     public void updateBusInformation() {
+        if (dataReady){
+            return;
+        }
+
         DownloadJSONFromURL downloadJSONFromURL =new DownloadJSONFromURL();
-        JSONObject busRouteData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/ROUTE");
+        JSONObject busRouteData = null;
+        try {
+            busRouteData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/ROUTE");
+        } catch (IOException e) {
+            if(this.networkFailHandler!=null){
+                Message message =this.networkFailHandler.obtainMessage(1,new String("NetworkFail"));
+                this.networkFailHandler.sendMessage(message);
+            }
+
+            return;
+        }
         busRouteList =new ArrayList<>();
         busRouteMap =new HashMap<>();
         busRouteToIdMap =new HashMap<>();
@@ -157,7 +182,15 @@ public class BusInformationController {
             e.printStackTrace();
         }
 
-        busStationData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/Stop");
+        try {
+            busStationData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/Stop");
+        } catch (IOException e) {
+            if(this.networkFailHandler!=null){
+                Message message =this.networkFailHandler.obtainMessage(1,new String("NetworkFail"));
+                this.networkFailHandler.sendMessage(message);
+            }
+            return;
+        }
         busStationList =new ArrayList<>();
         busStationMap =new HashMap<>();
         stopIdToBusStationLocationIdMap =new HashMap<>();
@@ -183,13 +216,26 @@ public class BusInformationController {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        if(this.systemInitFinishHandler!=null){
+            Message message =this.systemInitFinishHandler.obtainMessage(1,new String("DataReady"));
+            this.systemInitFinishHandler.sendMessage(message);
+        }
+
+        dataReady =true;
+
 
 
     }
 
     public void getEstimateTime(){
+        if(!dataReady)return;
         DownloadJSONFromURL downloadJSONFromURL =new DownloadJSONFromURL();
-        JSONObject busEstimateTimeData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/EstimateTime");
+        JSONObject busEstimateTimeData = null;
+        try {
+            busEstimateTimeData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/EstimateTime");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try {
             JSONArray busEstimateTimeList =busEstimateTimeData.getJSONArray("BusInfo");
             for (int j =0;j<listenBusRoute.size();j++){
@@ -222,12 +268,12 @@ public class BusInformationController {
 
 
             for(int j=0;j<listenBusStation.size();j++){
-                List<BusEstimateTime> busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusRoute.get(j).first);
+                List<BusEstimateTime> busEstimateTimeByStationList = busEstimateTimeByStationMap.get(listenBusRoute.get(j).first);
                 Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusRoute.get(j).first);
                 if (busEstimateTimeMap ==null){
                     createEstimateTimeByStationList(listenBusStation.get(j).first);
                     busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusStation.get(j).first);
-                    busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusStation.get(j).first);
+                    busEstimateTimeByStationList = busEstimateTimeByStationMap.get(listenBusStation.get(j).first);
                 }
                 for(int i=0;i<busEstimateTimeList.length();i++){
                     if(busEstimateTimeMap.get(busEstimateTimeList.getJSONObject(i).getInt("StopID"))!=null){
@@ -236,13 +282,13 @@ public class BusInformationController {
                         busEstimateTime.estimateTime =busEstimateTimeList.getJSONObject(i).getString("EstimateTime");
                     }
                 }
-                for(int i=0;i<busEstimateTimeByRouteList.size();i++){
-                    BusEstimateTime busEstimateTime= busEstimateTimeByRouteList.get(i);
+                for(int i=0;i<busEstimateTimeByStationList.size();i++){
+                    BusEstimateTime busEstimateTime= busEstimateTimeByStationList.get(i);
                     Log.d("BusEstimateTimeByRoute",busEstimateTime.busRoute.busRouteName+"   "+busEstimateTime.busStation.busStationName+"   "+busEstimateTime.estimateTime+"   "+busEstimateTime.goBack);
                 }
                 Handler handler = listenBusStation.get(j).second;
                 Message message;
-                message = handler.obtainMessage(1,(ArrayList<BusEstimateTime>)busEstimateTimeByRouteList);
+                message = handler.obtainMessage(1,(ArrayList<BusEstimateTime>)busEstimateTimeByStationList);
                 handler.sendMessage(message);
 
             }
@@ -258,42 +304,66 @@ public class BusInformationController {
     {
         public void run()
         {
+
+            updateBusInformation();
+                //searchRouteByName("29");
+                //searchStationByName("中華");
             synchronized (synchronizedLock){
-                updateBusInformation();
-                searchRouteByName("29");
-                searchStationByName("中華");
                 getEstimateTime();
             }
 
         }
     };
 
+    public  class  MyThreadTask extends Thread
+    {
+        public void run()
+        {
+            synchronized (synchronizedLock){
+                getEstimateTime();
+            }
+        }
+    }
+
     public  void searchLineByName(String name ,Handler handler){
         listenBusRoute.add(new Pair<Integer, Handler>(11411,handler));
     }
 
+    MyThreadTask myThreadTask =new MyThreadTask();
+
     public void listenEstimateTimeByRoute(BusRoute busRoute,Handler handler){
-        listenBusRoute.add(new Pair<Integer, Handler>(busRoute.routeId,handler));
+        synchronized (synchronizedLock){
+            listenBusRoute.add(new Pair<Integer, Handler>(busRoute.routeId,handler));
+        }
+        myThreadTask.start();
     }
     public void cancelListenByRoute(BusRoute busRoute,Handler handler){
-        for (int i=0;i<listenBusRoute.size();i++){
-            if(listenBusRoute.get(i).first==busRoute.routeId&&listenBusRoute.get(i).second==handler){
-                listenBusRoute.remove(i);
-                break;
+        synchronized (synchronizedLock){
+            for (int i=0;i<listenBusRoute.size();i++){
+                if(listenBusRoute.get(i).first==busRoute.routeId&&listenBusRoute.get(i).second==handler){
+                    listenBusRoute.remove(i);
+                    break;
+                }
             }
         }
+
     }
     public void listenEstimateTimeByStation(BusStation busStation,Handler handler){
-
-        listenBusStation.add(new Pair<String, Handler>(busStation.busStationName,handler));
+        synchronized (synchronizedLock){
+            listenBusStation.add(new Pair<String, Handler>(busStation.busStationName,handler));
+        }
+        myThreadTask.start();
     }
     public void cancelListenByStation(BusStation busStation,Handler handler){
-        for (int i=0;i<listenBusStation.size();i++){
-            if(listenBusStation.get(i).first.equals(busStation.busStationName)&&listenBusStation.get(i).second==handler){
-                listenBusStation.remove(i);
-                break;
+        synchronized (synchronizedLock){
+            for (int i=0;i<listenBusStation.size();i++){
+                if(listenBusStation.get(i).first.equals(busStation.busStationName)&&listenBusStation.get(i).second==handler){
+                    listenBusStation.remove(i);
+                    break;
+                }
             }
         }
+
     }
 
     public List<BusRoute> searchRouteByName(String busRouteName){
