@@ -215,7 +215,7 @@ public class BusInformationController {
                 }
 
                 Message message =new Message();
-                message = handler.obtainMessage(1,busEstimateTimeByRouteList);
+                message = handler.obtainMessage(1,(ArrayList<BusEstimateTime>)busEstimateTimeByRouteList);
                 handler.sendMessage(message);
 
             }
@@ -264,9 +264,10 @@ public class BusInformationController {
     };
     public void searchLineByName(String lineName){
 //        this.lineName=lineName;
-//        timer.schedule(new MyTimerTask(), 0, 30000);
+ timer.schedule(new MyTimerTask(), 0, 30000);
 //        listenBusRoute.add(16111);
 //        listenBusStation.add("中華");
+    listenBusRoute.add(busRouteToIdMap.get(lineName));
     }
 
     public void listenEstimateTimeByRoute(BusRoute busRoute,Handler handler){

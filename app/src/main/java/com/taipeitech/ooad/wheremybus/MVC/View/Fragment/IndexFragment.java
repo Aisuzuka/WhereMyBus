@@ -5,8 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
-import com.taipeitech.ooad.wheremybus.BusInfo.BusInformationController;
 import com.taipeitech.ooad.wheremybus.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,57 +24,10 @@ import java.util.List;
  */
 
 public class IndexFragment extends Fragment {
-    private ListView list;
-
-    public class MyAdapter extends BaseAdapter {
-        private LayoutInflater myInflater;
-        private List<BusEstimateTime> mList;
-
-        public MyAdapter(Context c, List<BusEstimateTime> mList) {
-            this.mList=mList;
-            myInflater = LayoutInflater.from(c);
-        }
-
-        public void setList(List<BusEstimateTime> mList){
-            this.mList=mList;
-        }
-
-        @Override
-        public int getCount() {
-// TODO Auto-generated method stub
-            return mList.size();
-            // return names.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-// TODO Auto-generated method stub
-            return mList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-// TODO Auto-generated method stub
-            return position;
-        }
-
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-// TODO Auto-generated method stub
-            convertView = myInflater.inflate(R.layout.estimate_bus_time, null);
-            final TextView name = (TextView) convertView.findViewById(R.id.textView);
-            final TextView time = (TextView) convertView.findViewById(R.id.textView2);
-
-            name.setText(mList.get(position).busStation.busStationName + "         " + mList.get(position).goBack);
-            time.setText(mList.get(position).estimateTime);
-            return convertView;
-        }
-    }
     View view;
-
     Button busSearch, stationSearch, alarmList;
     View.OnClickListener indexClickListener;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,9 +49,9 @@ public class IndexFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = null;
-                switch(v.getId()){
+                switch (v.getId()) {
                     case R.id.busSearchButton:
-                        fragment = new BusPageFragment();
+                        fragment = new BusLinePageFragment();
                         break;
                     case R.id.stationSearchButton:
                         fragment = new StationListFragment();

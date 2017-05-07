@@ -17,7 +17,7 @@
         android:weightSum="1">
 
         <ListView
-            android:id="@+id/listViewEstimateTimeByRoute"
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

@@ -2,7 +2,11 @@ package com.taipeitech.ooad.wheremybus.MVC.Controller;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+
 import android.os.Handler;
+
+import android.content.Context;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,6 +15,12 @@ import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static Context context;
+
+    public static Context getContext() {
+        return context;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.fragment, indexFragment);
         ft.commit();
-        Handler handler=new Handler();
-        BusInformationController busInformationController=new BusInformationController(handler);
-        busInformationController.searchLineByName("299");
+//        Handler handler=new Handler();
+//        BusInformationController busInformationController=new BusInformationController(handler);
+//        busInformationController.searchLineByName("299");
 
 
     }
@@ -32,5 +42,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        context = getContext();
     }
 }
