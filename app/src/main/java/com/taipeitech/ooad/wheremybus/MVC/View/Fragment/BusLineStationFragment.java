@@ -46,7 +46,7 @@ public class BusLineStationFragment extends Fragment {
                 }
             }
         };
-        SystemController.getBusEstimateTime(busEstimateTimeHandler, busLine);
+        //SystemController.getBusEstimateTime(busEstimateTimeHandler, busLine);
     }
 
     @Override
