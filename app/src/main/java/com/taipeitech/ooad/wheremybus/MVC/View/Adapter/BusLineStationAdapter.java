@@ -41,7 +41,7 @@ public class BusLineStationAdapter extends ArrayAdapter<BusEstimateTime> {
         viewHolder.station = (TextView) convertView.findViewById(R.id.station);
         viewHolder.estimeTime = (TextView) convertView.findViewById(R.id.estimeTime);
         setContext(position);
-        return super.getView(position, convertView, parent);
+        return convertView;
     }
 
     private void setContext(int position) {
