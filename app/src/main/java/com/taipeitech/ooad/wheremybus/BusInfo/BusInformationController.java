@@ -269,7 +269,7 @@ public class BusInformationController {
     };
 
     public  void searchLineByName(String name ,Handler handler){
-        listenBusRoute.add(new Pair<Integer, Handler>(busRouteToIdMap.get(name),handler));
+        listenBusRoute.add(new Pair<Integer, Handler>(11411,handler));
     }
 
     public void listenEstimateTimeByRoute(BusRoute busRoute,Handler handler){

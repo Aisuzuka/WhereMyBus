@@ -27,7 +27,7 @@ public class BusLineStationFragment extends Fragment {
     View view;
     String busLine;
     BusLineStationAdapter stationAdapter;
-    ArrayList<BusEstimateTime> stationList;
+    ArrayList<BusEstimateTime> stationList = new ArrayList<BusEstimateTime>();
     ListView listView;
 
     @Override
