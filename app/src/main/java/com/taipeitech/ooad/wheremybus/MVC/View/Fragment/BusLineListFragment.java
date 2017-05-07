@@ -17,12 +17,12 @@ public class BusLineListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.bus_page, container, false);
+        View view = inflater.inflate(R.layout.search_page, container, false);
         return view;
     }
 
-//    BusLineStationFragment fragment = new BusLineStationFragment();
+//    ResultByRouteFragment fragment = new ResultByRouteFragment();
 //    Bundle bundle = new Bundle();
-//    bundle.putString("busLine", busLine);
+//    bundle.putString("station", station);
 //    fragment.setArguments(bundle);
 }

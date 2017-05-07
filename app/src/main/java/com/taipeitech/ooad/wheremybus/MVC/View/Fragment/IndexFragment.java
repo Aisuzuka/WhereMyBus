@@ -3,21 +3,14 @@ package com.taipeitech.ooad.wheremybus.MVC.View.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.R;
-
-import java.util.List;
 
 /**
  * Created by Pyakuren-Chienhua on 2017/5/4.
@@ -25,8 +18,9 @@ import java.util.List;
 
 public class IndexFragment extends Fragment {
     View view;
-    Button busSearch, stationSearch, alarmList;
+    Button searchByBusLine, NearStation, alarmList;
     View.OnClickListener indexClickListener;
+    private Button searchByStation;
 
     @Nullable
     @Override
@@ -50,15 +44,14 @@ public class IndexFragment extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = null;
                 switch (v.getId()) {
-                    case R.id.busSearchButton:
-                        fragment = new BusLinePageFragment();
-                        fragment = new BusLineStationFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("busLine", "299");
-                        fragment.setArguments(bundle);
+                    case R.id.SearchByBusLine:
+                        fragment = new SearchByRouteFragment();
                         break;
-                    case R.id.stationSearchButton:
-                        fragment = new StationListFragment();
+                    case R.id.SearchByStation:
+                        fragment = new SearchByStationFragment();
+                        break;
+                    case R.id.NearStationButton:
+                        fragment = new NearStationFragment();
                         break;
                     case R.id.alarmListButton:
                         fragment = new AlarmListFragment();
@@ -80,14 +73,16 @@ public class IndexFragment extends Fragment {
     }
 
     private void setViewListener() {
-        busSearch.setOnClickListener(indexClickListener);
-        stationSearch.setOnClickListener(indexClickListener);
+        searchByBusLine.setOnClickListener(indexClickListener);
+        searchByStation.setOnClickListener(indexClickListener);
+        NearStation.setOnClickListener(indexClickListener);
         alarmList.setOnClickListener(indexClickListener);
     }
 
     private void initView() {
-        busSearch = (Button) view.findViewById(R.id.busSearchButton);
-        stationSearch = (Button) view.findViewById(R.id.stationSearchButton);
+        searchByBusLine = (Button) view.findViewById(R.id.SearchByBusLine);
+        searchByStation = (Button) view.findViewById(R.id.SearchByStation);
+        NearStation = (Button) view.findViewById(R.id.NearStationButton);
         alarmList = (Button) view.findViewById(R.id.alarmListButton);
     }
 }

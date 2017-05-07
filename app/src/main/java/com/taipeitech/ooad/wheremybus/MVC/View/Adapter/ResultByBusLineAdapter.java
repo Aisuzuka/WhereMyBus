@@ -18,11 +18,11 @@ import java.util.ArrayList;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class BusLineStationAdapter extends ArrayAdapter<BusEstimateTime> {
+public class ResultByBusLineAdapter extends ArrayAdapter<BusEstimateTime> {
     ArrayList<BusEstimateTime> station;
     LayoutInflater myInflater;
     ViewHolder viewHolder;
-    public BusLineStationAdapter(Context context, int resource, ArrayList<BusEstimateTime> station) {
+    public ResultByBusLineAdapter(Context context, int resource, ArrayList<BusEstimateTime> station) {
         super(context, resource, station);
         this.station = station;
         myInflater = LayoutInflater.from(context);

@@ -7,13 +7,19 @@
         android:text="公車路線查詢"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/busSearchButton" />
+        android:id="@+id/SearchByBusLine" />
+
+    <Button
+        android:text="公車路線查詢"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SearchByStation" />
 
     <Button
         android:text="附近站牌查詢"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/stationSearchButton" />
+        android:id="@+id/NearStationButton" />
 
     <Button
         android:text="提醒列表"

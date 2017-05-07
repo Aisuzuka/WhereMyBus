@@ -13,11 +13,11 @@ import com.taipeitech.ooad.wheremybus.R;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class StationListFragment extends Fragment {
+public class NearStationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.bus_page, container, false);
+        View view = inflater.inflate(R.layout.search_page, container, false);
         return view;
     }
 }
