@@ -42,6 +42,6 @@ public class BusListAdapter extends ArrayAdapter<Bus>{
 
     public class ViewHolder{
         TextView stationName;
-        TextView estimate;
+        TextView estimeTime;
     }
 }

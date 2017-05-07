@@ -13,7 +13,7 @@ import com.taipeitech.ooad.wheremybus.R;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class StationListFragment extends Fragment {
+public class BusPageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
