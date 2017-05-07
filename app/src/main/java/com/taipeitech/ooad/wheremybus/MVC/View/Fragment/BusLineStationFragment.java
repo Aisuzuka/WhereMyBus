@@ -33,8 +33,8 @@ public class BusLineStationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        busLine = savedInstanceState.getString("busLine");
-        listView = (ListView) view.findViewById(R.id.listView);
+        Bundle bundle = getArguments();
+        busLine = bundle.getString("busLine");
         busEstimateTimeHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -60,6 +60,7 @@ public class BusLineStationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.station_page, container, false);
+        listView = (ListView) view.findViewById(R.id.listView);
         return view;
     }
 }

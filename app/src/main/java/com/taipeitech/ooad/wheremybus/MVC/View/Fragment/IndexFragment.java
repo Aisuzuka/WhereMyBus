@@ -52,6 +52,10 @@ public class IndexFragment extends Fragment {
                 switch (v.getId()) {
                     case R.id.busSearchButton:
                         fragment = new BusLinePageFragment();
+                        fragment = new BusLineStationFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("busLine", "299");
+                        fragment.setArguments(bundle);
                         break;
                     case R.id.stationSearchButton:
                         fragment = new StationListFragment();
