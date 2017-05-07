@@ -193,12 +193,12 @@ public class BusInformationController {
         try {
             JSONArray busEstimateTimeList =busEstimateTimeData.getJSONArray("BusInfo");
             for (int j =0;j<listenBusRoute.size();j++){
-                List<BusEstimateTime> busEstimateTimeByRouteList = busEstimateTimeByRouteMap.get(listenBusRoute.get(j));
-                Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByRouteMap.get(listenBusRoute.get(j));
+                List<BusEstimateTime> busEstimateTimeByRouteList = busEstimateTimeByRouteMap.get(listenBusRoute.get(j).first);
+                Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByRouteMap.get(listenBusRoute.get(j).first);
                 if (busEstimateTimeMap ==null){
                     createEstimateTimeByRouteList(listenBusRoute.get(j).first);
-                    busEstimateTimeMap = stopIdToBusEstimateTimeByRouteMap.get(listenBusRoute.get(j));
-                    busEstimateTimeByRouteList = busEstimateTimeByRouteMap.get(listenBusRoute.get(j));
+                    busEstimateTimeMap = stopIdToBusEstimateTimeByRouteMap.get(listenBusRoute.get(j).first);
+                    busEstimateTimeByRouteList = busEstimateTimeByRouteMap.get(listenBusRoute.get(j).first);
                 }
                 for(int i=0;i<busEstimateTimeList.length();i++){
                     if(busEstimateTimeList.getJSONObject(i).getInt("RouteID")==listenBusRoute.get(j).first){
@@ -222,12 +222,12 @@ public class BusInformationController {
 
 
             for(int j=0;j<listenBusStation.size();j++){
-                List<BusEstimateTime> busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusRoute.get(j));
-                Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusRoute.get(j));
+                List<BusEstimateTime> busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusRoute.get(j).first);
+                Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusRoute.get(j).first);
                 if (busEstimateTimeMap ==null){
                     createEstimateTimeByStationList(listenBusStation.get(j).first);
-                    busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusStation.get(j));
-                    busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusStation.get(j));
+                    busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusStation.get(j).first);
+                    busEstimateTimeByRouteList = busEstimateTimeByStationMap.get(listenBusStation.get(j).first);
                 }
                 for(int i=0;i<busEstimateTimeList.length();i++){
                     if(busEstimateTimeMap.get(busEstimateTimeList.getJSONObject(i).getInt("StopID"))!=null){
@@ -269,7 +269,7 @@ public class BusInformationController {
     };
 
     public  void searchLineByName(String name ,Handler handler){
-        listenBusRoute.add(new Pair<Integer, Handler>(busRouteToIdMap.get(name),handler));
+        listenBusRoute.add(new Pair<Integer, Handler>(11411,handler));
     }
 
     public void listenEstimateTimeByRoute(BusRoute busRoute,Handler handler){
