@@ -17,11 +17,11 @@ import java.util.ArrayList;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class BusListAdapter extends ArrayAdapter<Bus>{
+public class BusLineListAdapter extends ArrayAdapter<Bus>{
     ArrayList<Bus> bus;
     LayoutInflater myInflater;
     ViewHolder viewHolder;
-    public BusListAdapter(Context context, int resource, ArrayList<Bus> bus) {
+    public BusLineListAdapter(Context context, int resource, ArrayList<Bus> bus) {
         super(context, resource, bus);
         this.bus = bus;
         myInflater = LayoutInflater.from(context);
@@ -42,6 +42,6 @@ public class BusListAdapter extends ArrayAdapter<Bus>{
 
     public class ViewHolder{
         TextView stationName;
-        TextView estimate;
+        TextView estimeTime;
     }
 }

@@ -11,23 +11,14 @@
     tools:context="com.taipeitech.ooad.wheremybus.MVC.Controller.MainActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="1">
 
-        <EditText
+        <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:ems="10"
-            android:id="@+id/editText"
-            android:hint="Line Number" />
-
-        <Button
-            android:text="Search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/button" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 </RelativeLayout>

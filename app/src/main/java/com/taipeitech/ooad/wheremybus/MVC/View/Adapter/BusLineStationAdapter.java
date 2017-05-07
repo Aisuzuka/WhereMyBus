@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.Model.Station;
 import com.taipeitech.ooad.wheremybus.R;
 
@@ -17,11 +18,11 @@ import java.util.ArrayList;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class StationListAdapter extends ArrayAdapter<Station> {
-    ArrayList<Station> station;
+public class BusLineStationAdapter extends ArrayAdapter<BusEstimateTime> {
+    ArrayList<BusEstimateTime> station;
     LayoutInflater myInflater;
     ViewHolder viewHolder;
-    public StationListAdapter(Context context, int resource, ArrayList<Station> station) {
+    public BusLineStationAdapter(Context context, int resource, ArrayList<BusEstimateTime> station) {
         super(context, resource, station);
         this.station = station;
         myInflater = LayoutInflater.from(context);
@@ -31,13 +32,21 @@ public class StationListAdapter extends ArrayAdapter<Station> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = myInflater.inflate(R.layout.bus_item , null);
+            convertView = myInflater.inflate(R.layout.station_item , null);
             viewHolder = new ViewHolder();
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        viewHolder.station = (TextView) convertView.findViewById(R.id.station);
+        viewHolder.estimeTime = (TextView) convertView.findViewById(R.id.estimeTime);
+        setContext(position);
         return super.getView(position, convertView, parent);
+    }
+
+    private void setContext(int position) {
+        viewHolder.station.setText(station.get(position).busStation.busStationName + "         " + station.get(position).goBack);
+        viewHolder.estimeTime.setText(station.get(position).estimateTime);
     }
 
     public class ViewHolder{

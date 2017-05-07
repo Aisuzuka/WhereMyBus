@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.taipeitech.ooad.wheremybus.R;
 
@@ -13,11 +14,12 @@ import com.taipeitech.ooad.wheremybus.R;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class BusListFragment extends Fragment {
+public class BusLinePageFragment extends Fragment {
+    ListView listView;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_system_controller, container, false);
+        View view = inflater.inflate(R.layout.bus_page, container, false);
         return view;
     }
 }
