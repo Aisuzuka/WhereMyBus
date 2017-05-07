@@ -7,4 +7,5 @@ public class BusRoute {
     public String departure;
     public String destination;
     public String busRouteName;
+    public  int routeId;
 }

@@ -8,4 +8,5 @@ public class BusStation {
     public String address;
     public float lon;
     public float lat;
+    public int locationId;
 }

@@ -37,6 +37,7 @@ public class BusInformationController {
     private Map<Integer,String> busIdName=new HashMap<Integer, String>();
 
     public  BusInformationController(Handler handler){
+        timer.schedule(new MyTimerTask(), 0, 30000);
         this.handler=handler;
         timer = new Timer(true);
     }
@@ -49,11 +50,14 @@ public class BusInformationController {
     private List<BusRoute> busRouteList;
     private List<BusStation> busStationList;
     private Map<Integer,BusRoute> busRouteMap;
-    private Map<Integer,BusStation> busStationMap;
+    private Map<String,BusStation> busStationMap;
 
 
     private List<Integer> listenBusRoute =new ArrayList<>();
+    private Map<Integer,Handler> listenBusRouteHandler =new HashMap<>();
+
     private List<String> listenBusStation = new ArrayList<>();
+    private Map<Integer,Handler> listenBusStationHandler =new HashMap<>();
 
     JSONObject busStationData;
     private Map<Integer,List<BusEstimateTime>> busEstimateTimeByRouteMap =new HashMap<>();
@@ -76,7 +80,7 @@ public class BusInformationController {
                     BusEstimateTime busEstimateTime =new BusEstimateTime();
                     busEstimateTime.goBack =busStationList.getJSONObject(i).getString("goBack");
                     busEstimateTime.busRoute=busRouteMap.get(busStationList.getJSONObject(i).getInt("routeId"));
-                    busEstimateTime.busStation=busStationMap.get(busStationList.getJSONObject(i).getInt("stopLocationId"));
+                    busEstimateTime.busStation=busStationMap.get(busStationList.getJSONObject(i).getString("nameZh"));
                     busEstimateTimeList.add(busEstimateTime);
                     busEstimateTimeMap.put(busStationList.getJSONObject(i).getInt("Id"),busEstimateTime);
                 }
@@ -86,7 +90,7 @@ public class BusInformationController {
                     BusEstimateTime busEstimateTime =new BusEstimateTime();
                     busEstimateTime.goBack =busStationList.getJSONObject(i).getString("goBack");
                     busEstimateTime.busRoute=busRouteMap.get(busStationList.getJSONObject(i).getInt("routeId"));
-                    busEstimateTime.busStation=busStationMap.get(busStationList.getJSONObject(i).getInt("stopLocationId"));
+                    busEstimateTime.busStation=busStationMap.get(busStationList.getJSONObject(i).getString("nameZh"));
                     busEstimateTimeList.add(busEstimateTime);
                     busEstimateTimeMap.put(busStationList.getJSONObject(i).getInt("Id"),busEstimateTime);
                 }
@@ -117,7 +121,7 @@ public class BusInformationController {
                     BusEstimateTime busEstimateTime =new BusEstimateTime();
                     busEstimateTime.goBack =busStationList.getJSONObject(i).getString("goBack");
                     busEstimateTime.busRoute=busRouteMap.get(busStationList.getJSONObject(i).getInt("routeId"));
-                    busEstimateTime.busStation=busStationMap.get(busStationList.getJSONObject(i).getInt("stopLocationId"));
+                    busEstimateTime.busStation=busStationMap.get(busStationList.getJSONObject(i).getString("nameZh"));
                     busEstimateTimeList.set(busStationList.getJSONObject(i).getInt("seqNo"),busEstimateTime);
                     busEstimateTimeMap.put(busStationList.getJSONObject(i).getInt("Id"),busEstimateTime);
                 }
@@ -142,6 +146,7 @@ public class BusInformationController {
                     busRoute.busRouteName = busRouteList.getJSONObject(i).getString("nameZh");
                     busRoute.departure = busRouteList.getJSONObject(i).getString("departureZh");
                     busRoute.destination = busRouteList.getJSONObject(i).getString("destinationZh");
+                    busRoute.routeId=id;
                     this.busRouteList.add(busRoute);
                     this.busRouteMap.put(id,busRoute);
                     this.busRouteToIdMap.put(busRoute.busRouteName,id);
@@ -160,22 +165,17 @@ public class BusInformationController {
         try {
             JSONArray busStationList = busStationData.getJSONArray("BusInfo");
             for (int i =0 ;i<busStationList.length();i++){
-                int id =busStationList.getJSONObject(i).getInt("stopLocationId");
-                if(busStationMap.get(id)==null){
+                String stationName =busStationList.getJSONObject(i).getString("nameZh");
+                if(busStationMap.get(stationName)==null){
                     BusStation busStation = new BusStation();
                     busStation.busStationName = busStationList.getJSONObject(i).getString("nameZh");
                     busStation.address=busStationList.getJSONObject(i).getString("address");
                     busStation.lat= Float.valueOf( busStationList.getJSONObject(i).getString("showLat"));
                     busStation.lon= Float.valueOf( busStationList.getJSONObject(i).getString("showLon"));
                     this.busStationList.add(busStation);
-                    this.busStationMap.put(id,busStation);
-//                    if( this.busStationToIdMap.get(busStation.busStationName)!=null){
-//                        Log.d("Station Information","ERRROR+_________________________");
-//                    }
-//                    this.busStationToIdMap.put(busStation.busStationName,id);
+                    this.busStationMap.put(stationName,busStation);
                     Log.d("Station Information",busStation.busStationName+"   "+busStation.address+"   "+busStation.lon+"   "+busStation.lat);
                 }
-                this.stopIdToBusStationLocationIdMap.put(busStationList.getJSONObject(i).getInt("Id"),id);
 
 
 
@@ -207,9 +207,11 @@ public class BusInformationController {
                         busEstimateTime.estimateTime =busEstimateTimeList.getJSONObject(i).getString("EstimateTime");
                     }
                 }
+
                 for(int i=0;i<busEstimateTimeByRouteList.size();i++){
                     BusEstimateTime busEstimateTime= busEstimateTimeByRouteList.get(i);
-                    Log.d("BusEstimateTimeByRoute",busEstimateTime.busRoute.busRouteName+"   "+busEstimateTime.busStation.busStationName+"   "+busEstimateTime.estimateTime+"   "+busEstimateTime.goBack);
+                        Log.d("BusEstimateTimeByRoute",busEstimateTime.busRoute.busRouteName+"   "+busEstimateTime.busStation.busStationName+"   "+busEstimateTime.estimateTime+"   "+busEstimateTime.goBack);
+
                 }
 
                 Message message =new Message();
@@ -238,19 +240,6 @@ public class BusInformationController {
                     BusEstimateTime busEstimateTime= busEstimateTimeByRouteList.get(i);
                     Log.d("BusEstimateTimeByRoute",busEstimateTime.busRoute.busRouteName+"   "+busEstimateTime.busStation.busStationName+"   "+busEstimateTime.estimateTime+"   "+busEstimateTime.goBack);
                 }
-
-//                for(int i=0;i<busEstimateTimeList.length();i++){
-//                    if(stopIdToBusStationLocationIdMap.get(busEstimateTimeList.getJSONObject(i).getInt("StopID"))==listenBusStation.get(j)){
-//                        BusEstimateTime busEstimateTime =new BusEstimateTime();
-//                        busEstimateTime.estimateTime =busEstimateTimeList.getJSONObject(i).getString("EstimateTime");
-//                        busEstimateTime.goBack =busEstimateTimeList.getJSONObject(i).getString("GoBack");
-//                        busEstimateTime.busRoute=busRouteMap.get(busEstimateTimeList.getJSONObject(i).getInt("RouteID"));
-//                        busEstimateTime.busStation=busStationMap.get(stopIdToBusStationLocationIdMap.get(busEstimateTimeList.getJSONObject(i).getInt("StopID")));
-//
-//                        Log.d("BusEstimateTimeByRoute",busEstimateTime.busRoute.busRouteName+"   "+busEstimateTime.busStation.busStationName+"   "+busEstimateTime.estimateTime+"   "+busEstimateTime.goBack);
-//
-//                    }
-//                }
             }
 
 
@@ -266,70 +255,73 @@ public class BusInformationController {
         {
             synchronized (synchronizedLock){
                 updateBusInformation();
-
+                searchRouteByName("29");
+                searchStationByName("中華");
                 getEstimateTime();
             }
-
-
-
-//            if(busData==null){
-//                DownloadJSONFromURL downloadJSONFromURL =new DownloadJSONFromURL();
-//                busData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/ROUTE");
-//                try {
-//                    JSONArray lineList = busData.getJSONArray("BusInfo");
-//                    for(int i=0;i<lineList.length();i++){
-//                        if(lineList.getJSONObject(i).getString("nameZh").equals(lineName)){
-//                            lineId = lineList.getJSONObject(i).getInt("Id");
-//                           // Log.d("ID____________",String.valueOf(lineId));
-//                            break;
-//                        }
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//
-//
-//            if(stationData==null){
-//                DownloadJSONFromURL downloadJSONFromURL =new DownloadJSONFromURL();
-//                stationData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/Stop");
-//                try {
-//                    JSONArray lineList = stationData.getJSONArray("BusInfo");
-//                    for(int i=0;i<lineList.length();i++){
-//                        // if(!lineList.getJSONObject(i).getString("Id").equals(""))
-//                        busIdName.put(Integer.valueOf(lineList.getJSONObject(i).getInt("Id")),lineList.getJSONObject(i).getString("nameZh"));
-//                    }
-//
-//                } catch (JSONException e) {
-//
-//                    e.printStackTrace();
-//                }
-//             }
-//
-//
-//            try {
-//                 DownloadJSONFromURL downloadJSONFromURL =new DownloadJSONFromURL();
-//                 JSONObject lineInformation = downloadJSONFromURL.downloadURL("http://data.taipei/bus/EstimateTime");
-//                  JSONArray lineList = lineInformation.getJSONArray("BusInfo");
-//                  for (int i=0;i<lineList.length();i++){
-//                     if(lineList.getJSONObject(i).getInt("RouteID")==lineId){
-//                     Log.d("BusRoute",busIdName.get(lineList.getJSONObject(i).getInt("StopID"))+"    "+lineList.getJSONObject(i).getInt("StopID")+"    "+lineList.getJSONObject(i).getString("EstimateTime"));
-//                     }
-//                  }
-//                Log.d("BusRoute","end_________________________________________________");
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
 
         }
     };
     public void searchLineByName(String lineName){
-        this.lineName=lineName;
-        timer.schedule(new MyTimerTask(), 0, 30000);
-        listenBusRoute.add(16111);
-        listenBusStation.add("中華路口");
+//        this.lineName=lineName;
+//        timer.schedule(new MyTimerTask(), 0, 30000);
+//        listenBusRoute.add(16111);
+//        listenBusStation.add("中華");
     }
+
+    public void listenEstimateTimeByRoute(BusRoute busRoute,Handler handler){
+        listenBusRoute.add(busRoute.routeId);
+    }
+    public void cancelListenByRoute(BusRoute busRoute,Handler handler){
+        listenBusRoute.add(busRoute.routeId);
+    }
+    public void listenEstimateTimeByStation(BusStation busStation){
+
+        listenBusStation.add(busStation.busStationName);
+    }
+
+    public List<BusRoute> searchRouteByName(String busRouteName){
+        List<BusRoute> result =new ArrayList<>();
+        int strLength =busRouteName.length();
+        for(int i=0;i<busRouteList.size();i++){
+            if(busRouteList.get(i).busRouteName.length()>=strLength){
+                if(busRouteList.get(i).busRouteName.substring(0,strLength).equals(busRouteName)){
+                    result.add(busRouteList.get(i));
+
+                }
+            }
+
+        }
+        for (int i=0;i<result.size();i++){
+            Log.d("searchResult",result.get(i).busRouteName);
+        }
+
+        return result;
+    }
+
+    public List<BusStation> searchStationByName(String busRouteName){
+        List<BusStation> result =new ArrayList<>();
+        int strLength =busRouteName.length();
+        for(int i=0;i<busStationList.size();i++){
+            if(busStationList.get(i).busStationName.length()>=strLength){
+                if(busStationList.get(i).busStationName.substring(0,strLength).equals(busRouteName)){
+                    result.add(busStationList.get(i));
+
+                }
+            }
+
+        }
+        for (int i=0;i<result.size();i++){
+            Log.d("searchResult",result.get(i).busStationName);
+        }
+
+        return result;
+    }
+
+
+
+
+
 
 
 }
