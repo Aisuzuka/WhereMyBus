@@ -38,40 +38,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.fragment, indexFragment);
         ft.commit();
-
-        Handler statusHandler =  new Handler(){
-            Handler DOFindAttributehandler =  new Handler(){
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    List<BusEstimateTime> MsgString = (List<BusEstimateTime>)msg.obj;
-                    for(int i =0;i<MsgString.size();i++){
-                        Log.d("Mass",MsgString.get(i).busStation.busStationName);
-                    }
-                }
-
-            };
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                String MsgString = (String)msg.obj;
-                if(MsgString.equals("DataReady")){
-                    Log.d("dataOK","   ");
-                    SystemController.busInformationController.listenEstimateTimeByRoute(SystemController.busInformationController.searchRouteByName("299").get(0),DOFindAttributehandler);
-                }
-            }
-            };
-
-
-
-        SystemController.setSystemInitFinishListener(statusHandler);
-
-       // SystemController.getBusEstimateTime(DOFindAttributehandler,"299");
-       // Handler handler=new Handler();
-       // BusInformationController busInformationController=new BusInformationController(handler);
-       // busInformationController.searchLineByName("299");
-
-
     }
 
     @Override
