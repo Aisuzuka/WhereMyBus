@@ -4,13 +4,13 @@
     android:layout_height="match_parent">
 
     <Button
-        android:text="公車路線查詢"
+        android:text="路線號碼查詢"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/SearchByBusLine" />
 
     <Button
-        android:text="公車路線查詢"
+        android:text="站牌查詢"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/SearchByStation" />

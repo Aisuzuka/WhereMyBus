@@ -268,8 +268,8 @@ public class BusInformationController {
 
 
             for(int j=0;j<listenBusStation.size();j++){
-                List<BusEstimateTime> busEstimateTimeByStationList = busEstimateTimeByStationMap.get(listenBusRoute.get(j).first);
-                Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusRoute.get(j).first);
+                List<BusEstimateTime> busEstimateTimeByStationList = busEstimateTimeByStationMap.get(listenBusStation.get(j).first);
+                Map<Integer,BusEstimateTime> busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusStation.get(j).first);
                 if (busEstimateTimeMap ==null){
                     createEstimateTimeByStationList(listenBusStation.get(j).first);
                     busEstimateTimeMap = stopIdToBusEstimateTimeByStationMap.get(listenBusStation.get(j).first);
@@ -335,7 +335,7 @@ public class BusInformationController {
         synchronized (synchronizedLock){
             listenBusRoute.add(new Pair<Integer, Handler>(busRoute.routeId,handler));
         }
-        myThreadTask.start();
+        new MyThreadTask().start();
     }
     public void cancelListenByRoute(BusRoute busRoute,Handler handler){
         synchronized (synchronizedLock){
@@ -352,7 +352,7 @@ public class BusInformationController {
         synchronized (synchronizedLock){
             listenBusStation.add(new Pair<String, Handler>(busStation.busStationName,handler));
         }
-        myThreadTask.start();
+        new MyThreadTask().start();
     }
     public void cancelListenByStation(BusStation busStation,Handler handler){
         synchronized (synchronizedLock){
@@ -378,9 +378,9 @@ public class BusInformationController {
             }
 
         }
-        for (int i=0;i<result.size();i++){
-            Log.d("searchResult",result.get(i).busRouteName);
-        }
+//        for (int i=0;i<result.size();i++){
+//            Log.d("searchResult",result.get(i).busRouteName);
+//        }
 
         return result;
     }
@@ -397,9 +397,9 @@ public class BusInformationController {
             }
 
         }
-        for (int i=0;i<result.size();i++){
-            Log.d("searchResult",result.get(i).busStationName);
-        }
+//        for (int i=0;i<result.size();i++){
+//            Log.d("searchResult",result.get(i).busStationName);
+//        }
 
         return result;
     }

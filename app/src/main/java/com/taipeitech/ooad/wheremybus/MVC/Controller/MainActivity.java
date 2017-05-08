@@ -17,6 +17,7 @@ import com.taipeitech.ooad.wheremybus.Connecter.SystemController;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
+import com.taipeitech.ooad.wheremybus.Tool.TestBusInformation;
 
 import java.util.List;
 
@@ -38,7 +39,24 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.fragment, indexFragment);
         ft.commit();
+
+        Handler handler =new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+               String message = (String)msg.obj;
+                if(message.equals("DataReady")){
+                    TestBusInformation testBusInformation =new TestBusInformation(SystemController.busInformationController);
+                    Log.d("test" , "testSearchBusRouteByName");
+                    testBusInformation.testSearchBusRouteByName();
+                    Log.d("test" , "testSearchBusStationByName");
+                    testBusInformation.testSearchBusStationByName();
+                }
+            }
+        };
+        SystemController.setSystemInitFinishListener(handler);
+
     }
+
 
     @Override
     protected void onStart() {
