@@ -9,7 +9,10 @@ import com.taipeitech.ooad.wheremybus.Tool.DownloadJSONFromURL;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
+import com.taipeitech.ooad.wheremybus.Tool.DownloadObjectFromURL;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectReader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,14 +150,21 @@ public class BusInformationController {
             return;
         }
 
+
+
+
         DownloadJSONFromURL downloadJSONFromURL =new DownloadJSONFromURL();
         JSONObject busRouteData = null;
         try {
             busRouteData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/ROUTE");
+
+
+
         } catch (IOException e) {
             if(this.networkFailHandler!=null){
                 Message message =this.networkFailHandler.obtainMessage(1,new String("NetworkFail"));
                 this.networkFailHandler.sendMessage(message);
+                Log.d("fail","");
             }
 
             return;
@@ -232,7 +242,27 @@ public class BusInformationController {
         DownloadJSONFromURL downloadJSONFromURL =new DownloadJSONFromURL();
         JSONObject busEstimateTimeData = null;
         try {
+
             busEstimateTimeData = downloadJSONFromURL.downloadURL("http://data.taipei/bus/EstimateTime");
+
+
+            String theStr= downloadJSONFromURL.downloadURLString("http://data.taipei/bus/EstimateTime");
+
+            ObjectMapper objectMapper =new ObjectMapper();
+            ObjectReader  objectReader= objectMapper.reader(GetEstimateTime.class);
+
+
+            DownloadObjectFromURL downloadObjectFromURL =new DownloadObjectFromURL(GetEstimateTime.class,"http://data.taipei/bus/EstimateTime");
+
+
+
+
+
+            GetEstimateTime getEstimateTime = (GetEstimateTime)downloadObjectFromURL.downloadObject();
+
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
