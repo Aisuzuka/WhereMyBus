@@ -23,6 +23,11 @@ import java.util.Map;
 public class BusTable {
     private List<BusRoute> busRouteList =new ArrayList<>();
     private List<BusStation> busStationList = new ArrayList<>();
+    static BusTable busTable;
+
+    public static BusTable getBusTable(){
+        return busTable;
+    }
 
     public static BusTable createBustable() throws IOException {
         long startTime = System.nanoTime();
@@ -171,7 +176,7 @@ public class BusTable {
 
 
 
-
+        BusTable.busTable = busTable;
         return busTable;
     }
 

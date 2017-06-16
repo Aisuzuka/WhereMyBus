@@ -1,10 +1,12 @@
 package com.taipeitech.ooad.wheremybus.MVC.View.Fragment;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +14,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.taipeitech.ooad.wheremybus.Connecter.SystemController;
+import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
 import com.taipeitech.ooad.wheremybus.MVC.Controller.MainActivity;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 import com.taipeitech.ooad.wheremybus.MVC.View.Adapter.ResultByStationAdapter;
 import com.taipeitech.ooad.wheremybus.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Pyakuren-Chienhua on 2017/5/4.
@@ -31,9 +37,9 @@ public class ResultByStationFragment extends Fragment {
     View view;
     BusStation station;
     ResultByStationAdapter stationAdapter;
-    ArrayList<BusEstimateTime> goDistanceList = new ArrayList<BusEstimateTime>();
-    ArrayList<BusEstimateTime> backDistanceList = new ArrayList<BusEstimateTime>();
-    ArrayList<BusEstimateTime> busLineStationList = new ArrayList<BusEstimateTime>();
+    ArrayList<BusEstimateTime> goDistanceList = new ArrayList<>();
+    ArrayList<BusEstimateTime> backDistanceList = new ArrayList<>();
+    ArrayList<BusEstimateTime> busLineStationList = new ArrayList<>();
     ListView listView;
     View.OnClickListener distanceClickListener;
     boolean isGoDistance = true;
@@ -61,52 +67,27 @@ public class ResultByStationFragment extends Fragment {
     public void onStart() {
         super.onStart();
         relizationListener();
-        openRouteListener();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        closeRouteListener();
     }
 
     private void relizationListener() {
-        routeListener = new Handler() {
+        new Timer().schedule(new TimerTask() {
             @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                switch (msg.what) {
-                    case 1:
-                        clearAllListData();
-                        ArrayList<BusEstimateTime> list = (ArrayList<BusEstimateTime>) msg.obj;
-                        loadDataToList(list);
-                        break;
-                }
+            public void run() {
+                clearAllListData();
+                new getBusEstimateTimeByRoute().execute(station);
             }
-        };
+        }, 30000);
     }
 
-    private void closeRouteListener() {
-        SystemController.cancelListenEstimateTimeByStation(routeListener, station);
-    }
-
-    private void loadDataToList(ArrayList<BusEstimateTime> list) {
-        int size = list.size();
-        for (int count = 0; count < size; count++) {
-            loadDataToGoAndBackList(list.get(count));
-        }
+    private void loadDataToList(Pair<List<BusEstimateTime>,List<BusEstimateTime>> list) {
+        goDistanceList.addAll(list.first);
+        backDistanceList.addAll(list.second);
         loadDataToListView();
-    }
-
-    private void loadDataToGoAndBackList(BusEstimateTime item) {
-        switch (item.goBack) {
-            case GoDistanch:
-                goDistanceList.add(item);
-                break;
-            case BackDistance:
-                backDistanceList.add(item);
-                break;
-        }
     }
 
     private void getBusLineFromPastPage() {
@@ -116,10 +97,6 @@ public class ResultByStationFragment extends Fragment {
         station.lon = getArguments().getFloat("lon");
         station.lat = getArguments().getFloat("lat");
         station.locationId = getArguments().getInt("locationId");
-    }
-
-    private void openRouteListener() {
-        SystemController.getBusEstimateTimeByStation(routeListener, station);
     }
 
     private void clearAllListData() {
@@ -185,5 +162,24 @@ public class ResultByStationFragment extends Fragment {
 
         busLineView = (TextView) view.findViewById(R.id.BusLine);
         busLineView.setText("站牌 " + station.busStationName);
+    }
+
+    private class getBusEstimateTimeByRoute extends AsyncTask<BusStation, BusStation, Pair<List<BusEstimateTime>, List<BusEstimateTime>>> {
+        @Override
+        protected Pair<List<BusEstimateTime>, List<BusEstimateTime>> doInBackground(BusStation... params) {
+            Pair<List<BusEstimateTime>, List<BusEstimateTime>> pair = null;
+            try {
+                BusTable busTable = BusTable.getBusTable();
+                pair = busTable.getBusEstimateTimeByStation(params[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return pair;
+        }
+
+        @Override
+        protected void onPostExecute(Pair<List<BusEstimateTime>,List<BusEstimateTime>> pair) {
+            loadDataToList(pair);
+        }
     }
 }
