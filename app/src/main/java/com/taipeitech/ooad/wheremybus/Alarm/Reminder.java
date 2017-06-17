@@ -69,24 +69,29 @@ public class Reminder extends Service {
         return null;
     }
 
-    private void showNotification(BusRoute busRoute, BusStation busStation, Boolean isGoDistance) {
+    private void showNotification(BusArrivalEvent busArrivalEvent) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                busArrivalEvent.getEventId(),
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
         Notification notification = new Notification.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Service測試")
-                .setContentText("內容文字")
+                .setContentText(String.valueOf(busArrivalEvent.getEventId()))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
-        notificationManager.notify(1, notification);
+
+        notificationManager.notify(busArrivalEvent.getEventId(),notification);
     }
 
     public class SetOnBusArriveListener implements BusArriveListener {
         @Override
         public void busArrived(final BusArrivalEvent busArrivalEvent) {
-            showNotification(busArrivalEvent.getTargetBusRoute(), busArrivalEvent.getTargetBusStation(), busArrivalEvent.isGoDistance());
+            showNotification(busArrivalEvent);
             busArrivalEvent.stopWatch();
         }
     }

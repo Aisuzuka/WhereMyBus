@@ -9,6 +9,7 @@ import com.taipeitech.ooad.wheremybus.Alarm.Reminder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,7 +22,17 @@ public class BusArrivalEvent {
     private BusStation targetBusStation;
     private boolean isGoDistance;
     private int notificationTime;
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    private int eventId;
     private GetBusEstimateTime getBusEstimateTime;
+
+    public BusArrivalEvent(){
+        eventId = new Random().nextInt();
+    }
 
     public BusRoute getTargetBusRoute() {
         return targetBusRoute;
