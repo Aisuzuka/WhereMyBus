@@ -3,26 +3,21 @@ package com.taipeitech.ooad.wheremybus.MVC.Controller;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
-import android.os.Handler;
+import android.content.Intent;
 
 import android.content.Context;
 
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.taipeitech.ooad.wheremybus.BusInfo.BusInformationController;
+import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
-import com.taipeitech.ooad.wheremybus.Connecter.SystemController;
-import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 import com.taipeitech.ooad.wheremybus.MVC.Model.Event;
 import com.taipeitech.ooad.wheremybus.MVC.Model.Reminder;
 import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
-import com.taipeitech.ooad.wheremybus.Tool.TestBusInformation;
 
 import java.io.IOException;
 import java.util.List;
@@ -104,5 +99,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         context = this;
+        if(!Reminder.isAlive()) {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, Reminder.class);
+            this.startService(intent);
+        }
     }
 }

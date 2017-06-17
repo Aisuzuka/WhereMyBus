@@ -15,11 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.taipeitech.ooad.wheremybus.Connecter.SystemController;
+import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
 import com.taipeitech.ooad.wheremybus.MVC.Controller.MainActivity;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,8 +117,8 @@ public class SearchByRouteFragment extends Fragment {
     }
 
     private void searchRoute(String inputText) {
-        List<BusRoute> temp = SystemController.searchBusRouteByName(inputText);
-        if (temp.size() != 0) {
+        List<BusRoute> temp = BusTable.getBusTable().searchRouteByName(inputText);
+        if (temp != null) {
             filteredObjectList.addAll(temp);
         }
 
