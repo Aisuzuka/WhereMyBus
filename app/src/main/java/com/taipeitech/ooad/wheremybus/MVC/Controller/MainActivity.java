@@ -18,6 +18,8 @@ import com.taipeitech.ooad.wheremybus.Connecter.SystemController;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
+import com.taipeitech.ooad.wheremybus.MVC.Model.Event;
+import com.taipeitech.ooad.wheremybus.MVC.Model.Reminder;
 import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
 import com.taipeitech.ooad.wheremybus.Tool.TestBusInformation;
@@ -38,6 +40,23 @@ public class MainActivity extends AppCompatActivity {
                 busRouteList.get(1).getEstimateTime();
                 List<BusStation> busStationList = busTable.searchStationByName("中華路口");
                 busStationList.get(0).getEstimateTime();
+
+                BusRoute busRoute = busRouteList.get(1);
+                BusStation busStation =busRoute.getBusRouteGoList().get(0);
+                Reminder reminder =new Reminder(context);
+                Event event =new Event();
+                event.setGoBack(0);
+                event.setTimeEndHour(5);
+                event.setTimeEndMinite(30);
+                event.setTimeStartHour(4);
+                event.setTimeStartMinite(30);
+                event.setBusRuteName(busRoute.busRouteName);
+                event.setBusStationName(busStation.busStationName);
+                reminder.addAlarm(event);
+
+                List<Event> eventList=reminder.getAllAlarm();
+               Log.d("alarm", eventList.get(0).getBusEstimateTime().busRoute.busRouteName+eventList.get(0).getBusEstimateTime().busStation.busStationName+eventList.get(0).getBusEstimateTime().estimateTime);
+                Log.d("alarm", eventList.get(0).getBusRuteName()+busRoute.busRouteName);
             } catch (IOException e) {
                 e.printStackTrace();
             }

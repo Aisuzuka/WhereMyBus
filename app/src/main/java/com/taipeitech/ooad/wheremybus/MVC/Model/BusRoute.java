@@ -73,6 +73,56 @@ public class BusRoute {
 
     }
 
+    public BusEstimateTime getGoEstimateTimeByStation(BusStation busStation)throws IOException{
+        if(mirrorTable == null)getEstimateTime();
+        BusEstimateTime result =null;
+        for(int i=0;i<busGoEstimateTime.size();i++){
+            if(busGoEstimateTime.get(i).busStation==busStation){
+                result = busGoEstimateTime.get(i);
+                return result;
+            }
+
+        }
+        return result;
+    }
+
+    public BusEstimateTime getBackEstimateTimeByStation(BusStation busStation)throws IOException{
+        if(mirrorTable == null)getEstimateTime();
+        BusEstimateTime result =null;
+        for(int i=0;i<busBackEstimateTime.size();i++){
+            if(busBackEstimateTime.get(i).busStation==busStation){
+                result = busBackEstimateTime.get(i);
+                return result;
+            }
+
+        }
+        return result;
+    }
+
+    public BusStation getGoStationByName(String busStationName){
+        BusStation result =null;
+        for(int i=0;i<busStationGoList.size();i++){
+            if(busStationGoList.get(i).busStationName.equals(busStationName)){
+                result = busStationGoList.get(i);
+                return result;
+            }
+
+        }
+        return result;
+    }
+
+    public BusStation getBackStationByName(String busStationName){
+        BusStation result =null;
+        for(int i=0;i<busStationBackList.size();i++){
+            if(busStationBackList.get(i).busStationName.equals(busStationName)){
+                result = busStationBackList.get(i);
+                return result;
+            }
+
+        }
+        return result;
+    }
+
     public List<BusStation> getBusRouteGoList(){
         return busStationGoList;
     }
@@ -80,5 +130,6 @@ public class BusRoute {
     public List<BusStation> getBusRouteBackList(){
         return busStationBackList;
     }
+
 
 }

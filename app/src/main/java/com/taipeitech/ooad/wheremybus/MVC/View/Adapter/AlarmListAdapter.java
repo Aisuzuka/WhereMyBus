@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.taipeitech.ooad.wheremybus.MVC.Model.Alarm;
+import com.taipeitech.ooad.wheremybus.MVC.Model.Event;
 import com.taipeitech.ooad.wheremybus.R;
 
 import java.util.ArrayList;
@@ -17,13 +17,13 @@ import java.util.ArrayList;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class AlarmListAdapter extends ArrayAdapter<Alarm> {
-    ArrayList<Alarm> alarm;
+public class AlarmListAdapter extends ArrayAdapter<Event> {
+    ArrayList<Event> event;
     LayoutInflater myInflater;
     ViewHolder viewHolder;
-    public AlarmListAdapter(Context context, int resource, ArrayList<Alarm> alarm) {
-        super(context, resource, alarm);
-        this.alarm = alarm;
+    public AlarmListAdapter(Context context, int resource, ArrayList<Event> event) {
+        super(context, resource, event);
+        this.event = event;
         myInflater = LayoutInflater.from(context);
     }
 

@@ -23,8 +23,13 @@ import java.util.Map;
 public class BusTable {
     private List<BusRoute> busRouteList =new ArrayList<>();
     private List<BusStation> busStationList = new ArrayList<>();
+    private static BusTable busTable = null;
+    public static BusTable getBustable(){
+        return busTable;
+    }
 
     public static BusTable createBustable() throws IOException {
+        if(busTable!= null)return busTable;
         long startTime = System.nanoTime();
 
         DownloadObjectFromURL downloadObjectFromURLRoute =new DownloadObjectFromURL(GetRoute.class,"http://data.taipei/bus/ROUTE");
@@ -36,7 +41,7 @@ public class BusTable {
         long endTime = System.nanoTime();
         Log.d("TimeStreamJackson",String.valueOf(-startTime+endTime));
 
-        BusTable busTable =new BusTable();
+        busTable =new BusTable();
         List<BusRoute> busRouteList = busTable.busRouteList;
         List<BusStation> busStationList=busTable.busStationList;
 
@@ -193,6 +198,19 @@ public class BusTable {
         return result;
     }
 
+    public BusRoute getRouteByName(String busRouteName){
+        BusRoute result =null;
+        for(int i=0;i<busRouteList.size();i++){
+            if(busRouteList.get(i).busRouteName.equals(busRouteName)){
+                result = busRouteList.get(i);
+                return result;
+            }
+
+        }
+
+        return result;
+    }
+
     public List<BusStation> searchStationByName(String busStationName){
         List<BusStation> result =new ArrayList<>();
         int strLength =busStationName.length();
@@ -210,8 +228,23 @@ public class BusTable {
         return result;
     }
 
+    public BusStation getStationByName(String busStationName){
+        BusStation result =null;
+        for(int i=0;i<busStationList.size();i++){
+            if(busStationList.get(i).busStationName.equals(busStationName)){
+                result = busStationList.get(i);
+                return result;
+            }
+
+        }
+        return result;
+    }
+
     public List<BusStation> getAllStation(){
         return busStationList;
+    }
+    public List<BusRoute> getAllRoute(){
+        return busRouteList;
     }
 
     public Pair<List<BusEstimateTime>,List<BusEstimateTime>> getBusEstimateTimeByRoute(BusRoute busRoute)throws  IOException{
