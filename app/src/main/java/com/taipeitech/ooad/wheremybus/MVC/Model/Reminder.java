@@ -17,22 +17,21 @@ public class Reminder {
     public Reminder(Context context){
         dataBase =new DataBase(context);
     }
-    public void addAlarm(Event event){
+    public void addEvent(Event event){
         dataBase.insert(event);
     }
-    public void updateAlarm(Event event){
+    public void updateEvent(Event event){
         dataBase.update(event);
     }
 
-    public void deleteAlarm(Event event){
+    public void deleteEvent(Event event){
         dataBase.delete(event.getId());
     }
-    public List<Event> getAllAlarm(){
 
+    public List<Event> getAllEvent(){
         List<Event> eventList = dataBase.getAll();
         for (int i = 0; i< eventList.size(); i++){
             Event event = eventList.get(i);
-
         }
         return eventList;
     }
