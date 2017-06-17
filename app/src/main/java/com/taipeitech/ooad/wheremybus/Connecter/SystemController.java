@@ -2,7 +2,7 @@ package com.taipeitech.ooad.wheremybus.Connecter;
 
 import android.os.Handler;
 
-import com.taipeitech.ooad.wheremybus.Alarm.Reminder;
+import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 import com.taipeitech.ooad.wheremybus.BusInfo.BusInfoController;
 import com.taipeitech.ooad.wheremybus.BusInfo.BusInformationController;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;

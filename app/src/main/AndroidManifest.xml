@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Alarm.Reminder">
+        <service android:name=".Reminder.Reminder">
         </service>
     </application>
 

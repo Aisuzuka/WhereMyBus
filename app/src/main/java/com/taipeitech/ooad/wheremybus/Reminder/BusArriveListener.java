@@ -1,4 +1,4 @@
-package com.taipeitech.ooad.wheremybus.Alarm;
+package com.taipeitech.ooad.wheremybus.Reminder;
 
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusArrivalEvent;
 

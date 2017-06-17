@@ -3,8 +3,8 @@ package com.taipeitech.ooad.wheremybus.MVC.Model;
 import android.os.AsyncTask;
 import android.util.Pair;
 
-import com.taipeitech.ooad.wheremybus.Alarm.BusArriveListener;
-import com.taipeitech.ooad.wheremybus.Alarm.Reminder;
+import com.taipeitech.ooad.wheremybus.Reminder.BusArriveListener;
+import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,10 +18,18 @@ import java.util.TimerTask;
  */
 
 public class BusArrivalEvent {
-    private BusRoute targetBusRoute;
-    private BusStation targetBusStation;
+    private BusEstimateTime timeTable;
     private boolean isGoDistance;
     private int notificationTime;
+    private long referenceTime;
+
+    public long getReferenceTime() {
+        return referenceTime;
+    }
+
+    public void setReferenceTime(long referenceTime) {
+        this.referenceTime = referenceTime;
+    }
 
     public int getEventId() {
         return eventId;
@@ -30,24 +38,8 @@ public class BusArrivalEvent {
     private int eventId;
     private GetBusEstimateTime getBusEstimateTime;
 
-    public BusArrivalEvent(){
+    public BusArrivalEvent() {
         eventId = new Random().nextInt();
-    }
-
-    public BusRoute getTargetBusRoute() {
-        return targetBusRoute;
-    }
-
-    public void setTargetBusRoute(BusRoute targetBusRoute) {
-        this.targetBusRoute = targetBusRoute;
-    }
-
-    public BusStation getTargetBusStation() {
-        return targetBusStation;
-    }
-
-    public void setTargetBusStation(BusStation targetBusStation) {
-        this.targetBusStation = targetBusStation;
     }
 
     public boolean isGoDistance() {
@@ -74,12 +66,12 @@ public class BusArrivalEvent {
         watcher.schedule(new TimerTask() {
             @Override
             public void run() {
-                new GetBusEstimateTime().execute(targetBusStation);
+                new GetBusEstimateTime().execute(timeTable);
             }
         }, 0, 30000);
     }
 
-    public void stopWatch(){
+    public void stopWatch() {
         watcher.cancel();
     }
 
@@ -87,37 +79,26 @@ public class BusArrivalEvent {
         this.busArriveListener = busArriveListener;
     }
 
-    private class GetBusEstimateTime extends AsyncTask<BusStation, BusStation, Pair<List<BusEstimateTime>, List<BusEstimateTime>>> {
+    private class GetBusEstimateTime extends AsyncTask<BusEstimateTime, BusEstimateTime, BusEstimateTime> {
 
         @Override
-        protected Pair<List<BusEstimateTime>, List<BusEstimateTime>> doInBackground(BusStation... params) {
+        protected BusEstimateTime doInBackground(BusEstimateTime... params) {
             Pair<List<BusEstimateTime>, List<BusEstimateTime>> busEstimateTimeList = null;
-            try {
-                busEstimateTimeList = params[0].getEstimateTime();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return busEstimateTimeList;
+//                busEstimateTimeList = params[0].update();
+            return params[0];
         }
 
         @Override
-        protected void onPostExecute(Pair<List<BusEstimateTime>, List<BusEstimateTime>> listListPair) {
-            analysisEstimateTime(listListPair);
-            super.onPostExecute(listListPair);
+        protected void onPostExecute(BusEstimateTime timeTable) {
+            analysisEstimateTime(timeTable);
+            super.onPostExecute(timeTable);
         }
     }
 
-    private void analysisEstimateTime(Pair<List<BusEstimateTime>, List<BusEstimateTime>> listListPair) {
-        ArrayList<BusEstimateTime> list = null;
-        if (isGoDistance)
-            list = (ArrayList<BusEstimateTime>) listListPair.first;
-        else
-            list = (ArrayList<BusEstimateTime>) listListPair.second;
-        for (BusEstimateTime item : list) {
-            if (item.busRoute.busRouteName.equals(targetBusRoute)) {
-                if (Integer.valueOf(item.estimateTime) <= notificationTime) {
-                    busArriveListener.busArrived(this);
-                }
+    private void analysisEstimateTime(BusEstimateTime timeTable) {
+        if (System.currentTimeMillis() > referenceTime) {
+            if (Integer.valueOf(timeTable.estimateTime) <= notificationTime) {
+                busArriveListener.busArrived(this);
             }
         }
     }

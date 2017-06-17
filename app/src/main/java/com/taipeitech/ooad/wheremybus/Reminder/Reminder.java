@@ -1,4 +1,4 @@
-package com.taipeitech.ooad.wheremybus.Alarm;
+package com.taipeitech.ooad.wheremybus.Reminder;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,8 +11,6 @@ import android.util.Log;
 
 import com.taipeitech.ooad.wheremybus.MVC.Controller.MainActivity;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusArrivalEvent;
-import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
-import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 import com.taipeitech.ooad.wheremybus.R;
 
 import java.util.ArrayList;
@@ -58,7 +56,6 @@ public class Reminder extends Service {
     public void onCreate() {
         Log.e("Service", "Reminder been created");
         setOnBusArriveListener = new SetOnBusArriveListener();
-//        showNotification(null, null, null);
         reminder = this;
         super.onCreate();
     }
