@@ -48,7 +48,7 @@ public class ResultByStationAdapter extends ArrayAdapter<BusEstimateTime> {
         viewHolder.route.setText(station.get(position).busRoute.busRouteName);
         int time = Integer.parseInt(station.get(position).estimateTime);
         if (time >= 60) {
-            viewHolder.estimeTime.setText("預估" + Integer.toString(time / 60) + "分鐘後到站");
+            viewHolder.estimeTime.setText("預估" + Integer.toString((time / 60) + 1) + "分鐘後到站");
         } else if (time == -1){
             viewHolder.estimeTime.setText("尚未發車");
         } else if (time == -3){

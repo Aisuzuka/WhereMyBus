@@ -1,15 +1,13 @@
-package com.taipeitech.ooad.wheremybus.MVC.Model;
+package com.taipeitech.ooad.wheremybus.Reminder;
 
 import android.os.AsyncTask;
-import android.util.Pair;
 
 import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
-import com.taipeitech.ooad.wheremybus.Reminder.BusArriveListener;
-import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
+import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
+import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
+import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,40 +18,25 @@ import java.util.TimerTask;
 
 public class BusArrivalEvent {
     private BusEstimateTime timeTable;
+
     private int isGoDistance;
     private int notificationTime;
     private long referenceTime;
     private String targetBusRoute;
     private String targetBusStation;
     private long id;
-
-    public BusEstimateTime getBusEstimateTime() throws IOException{
-        BusTable busTable = BusTable.getBustable();
-        BusStation busStation=busTable.getStationByName(targetBusStation);
-        BusRoute busRoute = busTable.getRouteByName(targetBusRoute);
-        if(busStation ==null || busRoute ==null){
-            return null;
-        }
-        BusEstimateTime busEstimateTime;
-        if(isGoDistance ==1)
-            busEstimateTime= busRoute.getGoEstimateTimeByStation(busStation);
-        else
-            busEstimateTime= busRoute.getBackEstimateTimeByStation(busStation);
-
-        if (busEstimateTime ==null){
-            return null;
-        }
-        this.timeTable = busEstimateTime;
-
-        return busEstimateTime;
-    }
-
     public long getReferenceTime() {
         return referenceTime;
     }
 
-    public void setReferenceTime(long referenceTime) {
+    public BusArrivalEvent setTimeTable(BusEstimateTime timeTable) {
+        this.timeTable = timeTable;
+        return this;
+    }
+
+    public BusArrivalEvent setReferenceTime(long referenceTime) {
         this.referenceTime = referenceTime;
+        return this;
     }
 
     public int getEventId() {
@@ -65,27 +48,24 @@ public class BusArrivalEvent {
 
     public BusArrivalEvent() {
         eventId = new Random().nextInt();
-        try {
-            getBusEstimateTime();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public int isGoDistance() {
         return isGoDistance;
     }
 
-    public void setGoDistance(int goDistance) {
+    public BusArrivalEvent setGoDistance(int goDistance) {
         isGoDistance = goDistance;
+        return this;
     }
 
     public int getNotificationTime() {
         return notificationTime;
     }
 
-    public void setNotificationTime(int notificationTime) {
+    public BusArrivalEvent setNotificationTime(int notificationTime) {
         this.notificationTime = notificationTime;
+        return this;
     }
 
     private BusArriveListener busArriveListener;
@@ -98,7 +78,7 @@ public class BusArrivalEvent {
             public void run() {
                 new GetBusEstimateTime().execute(timeTable);
             }
-        }, 0, 30000);
+        }, 0, 5000);
     }
 
     public void stopWatch() {
@@ -117,12 +97,14 @@ public class BusArrivalEvent {
         return targetBusStation;
     }
 
-    public void setTargetBusRoute(String targetBusRoute) {
+    public BusArrivalEvent setTargetBusRoute(String targetBusRoute) {
         this.targetBusRoute = targetBusRoute;
+        return this;
     }
 
-    public void setTargetBusStation(String targetBusStation) {
+    public BusArrivalEvent setTargetBusStation(String targetBusStation) {
         this.targetBusStation = targetBusStation;
+        return this;
     }
 
     public long getId() {
@@ -137,8 +119,11 @@ public class BusArrivalEvent {
 
         @Override
         protected BusEstimateTime doInBackground(BusEstimateTime... params) {
-            Pair<List<BusEstimateTime>, List<BusEstimateTime>> busEstimateTimeList = null;
-//                busEstimateTimeList = params[0].update();
+            try {
+                params[0].updateTime();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return params[0];
         }
 
@@ -150,8 +135,8 @@ public class BusArrivalEvent {
     }
 
     private void analysisEstimateTime(BusEstimateTime timeTable) {
-        if (System.currentTimeMillis() > referenceTime) {
-            if (Integer.valueOf(timeTable.estimateTime) <= notificationTime) {
+        if (System.currentTimeMillis() >= referenceTime) {
+            if (Integer.valueOf(timeTable.estimateTime) >= 0 && Integer.valueOf(timeTable.estimateTime) <= notificationTime * 60) {
                 busArriveListener.busArrived(this);
             }
         }

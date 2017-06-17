@@ -24,7 +24,7 @@ public class BusTable {
     private List<BusRoute> busRouteList =new ArrayList<>();
     private List<BusStation> busStationList = new ArrayList<>();
     private static BusTable busTable = null;
-    public static BusTable getBustable(){
+    public static BusTable getBusTable(){
         return busTable;
     }
 

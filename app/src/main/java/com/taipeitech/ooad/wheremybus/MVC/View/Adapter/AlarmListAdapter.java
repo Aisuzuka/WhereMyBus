@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.taipeitech.ooad.wheremybus.MVC.Model.BusArrivalEvent;
+import com.taipeitech.ooad.wheremybus.Reminder.BusArrivalEvent;
 import com.taipeitech.ooad.wheremybus.R;
 
 import java.util.ArrayList;

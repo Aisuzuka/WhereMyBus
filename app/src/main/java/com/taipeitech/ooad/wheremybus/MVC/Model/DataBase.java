@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.taipeitech.ooad.wheremybus.Reminder.BusArrivalEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,11 +1,24 @@
 package com.taipeitech.ooad.wheremybus.MVC.Controller;
 
+import android.accessibilityservice.AccessibilityService;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
 
 
 import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
@@ -15,17 +28,22 @@ import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 
 import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
+import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static Context context;
-    public  class  MyThreadTask extends Thread
-    {
-        public void run()
-        {
+
+    public class MyThreadTask extends Thread {
+        public void run() {
             try {
                 BusTable busTable = BusTable.createBustable();
                 List<BusRoute> busRouteList = busTable.searchRouteByName("299");
@@ -34,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 busStationList.get(0).getEstimateTime();
 
                 BusRoute busRoute = busRouteList.get(1);
-                BusStation busStation =busRoute.getBusRouteGoList().get(0);
+                BusStation busStation = busRoute.getBusRouteGoList().get(0);
 //                Reminder reminder =new Reminder(context);
 //                Event event =new Event();
 //                event.setGoBack(0);
@@ -54,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public static Context getContext() {
         return context;
     }
@@ -69,9 +88,8 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.fragment, indexFragment);
         ft.commit();
 
-        MyThreadTask myThreadTask =new MyThreadTask();
+        MyThreadTask myThreadTask = new MyThreadTask();
         myThreadTask.start();
-
 
 
 //        Handler handler =new Handler(){
@@ -96,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         context = this;
-        if(!Reminder.isAlive()) {
+        if (!Reminder.isAlive()) {
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, Reminder.class);
             this.startService(intent);
