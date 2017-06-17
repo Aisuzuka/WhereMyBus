@@ -2,7 +2,7 @@ package com.taipeitech.ooad.wheremybus.Connecter;
 
 import android.os.Handler;
 
-import com.taipeitech.ooad.wheremybus.Alarm.AlarmController;
+import com.taipeitech.ooad.wheremybus.Alarm.Reminder;
 import com.taipeitech.ooad.wheremybus.BusInfo.BusInfoController;
 import com.taipeitech.ooad.wheremybus.BusInfo.BusInformationController;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
@@ -17,13 +17,13 @@ import java.util.List;
 
 public class SystemController {
 
-    AlarmController alarmController;
+    Reminder reminder;
     BusInfoController busInfoController;
     RoutePlanController routePlanController;
    public static BusInformationController busInformationController =new BusInformationController();
 
     public SystemController(){
-        alarmController = new AlarmController();
+        reminder = new Reminder();
         busInfoController = new BusInfoController();
         routePlanController = new RoutePlanController();
     }
