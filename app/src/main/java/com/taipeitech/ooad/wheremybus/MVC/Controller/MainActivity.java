@@ -2,18 +2,17 @@ package com.taipeitech.ooad.wheremybus.MVC.Controller;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-
+import android.content.Intent;
 import android.content.Context;
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 
 import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
-import com.taipeitech.ooad.wheremybus.MVC.Model.Event;
-import com.taipeitech.ooad.wheremybus.MVC.Model.Reminder;
+
+
 import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
 
@@ -36,20 +35,20 @@ public class MainActivity extends AppCompatActivity {
 
                 BusRoute busRoute = busRouteList.get(1);
                 BusStation busStation =busRoute.getBusRouteGoList().get(0);
-                Reminder reminder =new Reminder(context);
-                Event event =new Event();
-                event.setGoBack(0);
-                event.setTimeEndHour(5);
-                event.setTimeEndMinite(30);
-                event.setTimeStartHour(4);
-                event.setTimeStartMinite(30);
-                event.setBusRuteName(busRoute.busRouteName);
-                event.setBusStationName(busStation.busStationName);
-                reminder.addEvent(event);
-
-                List<Event> eventList=reminder.getAllEvent();
-               Log.d("alarm", eventList.get(0).getBusEstimateTime().busRoute.busRouteName+eventList.get(0).getBusEstimateTime().busStation.busStationName+eventList.get(0).getBusEstimateTime().estimateTime);
-                Log.d("alarm", eventList.get(0).getBusRuteName()+busRoute.busRouteName);
+//                Reminder reminder =new Reminder(context);
+//                Event event =new Event();
+//                event.setGoBack(0);
+//                event.setTimeEndHour(5);
+//                event.setTimeEndMinite(30);
+//                event.setTimeStartHour(4);
+//                event.setTimeStartMinite(30);
+//                event.setBusRuteName(busRoute.busRouteName);
+//                event.setBusStationName(busStation.busStationName);
+//                reminder.addEvent(event);
+//
+//                List<Event> eventList=reminder.getAllEvent();
+//               Log.d("alarm", eventList.get(0).getBusEstimateTime().busRoute.busRouteName+eventList.get(0).getBusEstimateTime().busStation.busStationName+eventList.get(0).getBusEstimateTime().estimateTime);
+//                Log.d("alarm", eventList.get(0).getBusRuteName()+busRoute.busRouteName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -97,5 +96,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         context = this;
+        if(!Reminder.isAlive()) {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, Reminder.class);
+            this.startService(intent);
+        }
     }
 }

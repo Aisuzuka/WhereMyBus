@@ -176,7 +176,7 @@ public class BusTable {
 
 
 
-
+        BusTable.busTable = busTable;
         return busTable;
     }
 
