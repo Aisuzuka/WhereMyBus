@@ -137,6 +137,66 @@ public class DataBase {
         return result;
     }
 
+    public static final String TABLE_NAME_FREQUENCE = "busitemfreuence";
 
+    public static final String KEY_ID_FREUENCE = "_id";
+
+    // 其它表格欄位名稱
+    public static final String BUSROUTENAME_FREUENCE_COLUMN = "busRuteName";
+    public static final String COUNT_COLUMN  = "clicknum";
+
+    public static final String CREATE_TABLE_FREQUENCE =
+            "CREATE TABLE " + TABLE_NAME_FREQUENCE + " (" +
+                    KEY_ID_FREUENCE + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COUNT_COLUMN + "  INTEGER NOT NULL," +
+                    BUSROUTENAME_FREUENCE_COLUMN + " TEXT NOT NULL)";
+
+
+
+    public FrequenceRoute insterBusRoute(FrequenceRoute frequenceRoute){
+        ContentValues cv = new ContentValues();
+
+        cv.put(COUNT_COLUMN, frequenceRoute.getCount());
+        cv.put(BUSROUTENAME_FREUENCE_COLUMN, frequenceRoute.getBusRouteName());
+
+        long id = db.insert(TABLE_NAME_FREQUENCE, null, cv);
+
+        frequenceRoute.setId(id);
+        return  frequenceRoute;
+    }
+    public boolean updateBusRoute(FrequenceRoute frequenceRoute){
+        ContentValues cv = new ContentValues();
+
+        cv.put(COUNT_COLUMN, frequenceRoute.getCount());
+        cv.put(BUSROUTENAME_FREUENCE_COLUMN, frequenceRoute.getBusRouteName());
+
+        String where = KEY_ID_FREUENCE + "=" +  frequenceRoute.getId();
+        return db.update(TABLE_NAME_FREQUENCE, cv, where, null) > 0;
+    }
+
+    public List<FrequenceRoute> getAllFrequenceRoute() {
+        List<FrequenceRoute> result = new ArrayList<>();
+        Cursor cursor = db.query(
+                TABLE_NAME_FREQUENCE, null, null, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            result.add(getRecordFrequenceRoute(cursor));
+        }
+
+        cursor.close();
+        return result;
+    }
+
+    public FrequenceRoute getRecordFrequenceRoute(Cursor cursor) {
+        // 準備回傳結果用的物件
+        FrequenceRoute result = new FrequenceRoute();
+
+        result.setId(cursor.getLong(0));
+        result.setCount((cursor.getInt(1)));
+        result.setBusRouteName(cursor.getString(2));
+
+
+        return result;
+    }
 
 }

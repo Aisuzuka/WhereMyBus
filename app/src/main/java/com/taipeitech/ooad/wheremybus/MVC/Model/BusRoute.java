@@ -29,6 +29,7 @@ public class BusRoute {
 
     private List<BusEstimateTime>busGoEstimateTime;
     private List<BusEstimateTime>busBackEstimateTime;
+    
 
     public Pair<List<BusEstimateTime>,List<BusEstimateTime>> getEstimateTime()throws IOException {
         if(mirrorTable == null){
