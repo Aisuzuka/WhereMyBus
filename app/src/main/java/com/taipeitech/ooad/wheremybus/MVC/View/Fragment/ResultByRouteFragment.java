@@ -98,7 +98,6 @@ public class ResultByRouteFragment extends Fragment {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                clearAllListData();
                 new getBusEstimateTimeByRoute().execute(route);
             }
         }, 0, 30000);
@@ -234,7 +233,7 @@ public class ResultByRouteFragment extends Fragment {
                                     .setTargetBusRoute(selectBusEstimateTime.busRoute.busRouteName)
                                     .setTargetBusStation(selectBusEstimateTime.busStation.busStationName)
                                     .setTimeTable(selectBusEstimateTime));
-                            Toast.makeText(MainActivity.getContext(), "已加入到站提醒", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.getContext(), "已加入到ㄓ", Toast.LENGTH_LONG).show();
                             dialog.cancel();
                         } else {
                             Toast.makeText(MainActivity.getContext(), "時間及到站提醒不得為空", Toast.LENGTH_LONG).show();
@@ -272,6 +271,7 @@ public class ResultByRouteFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Pair<List<BusEstimateTime>, List<BusEstimateTime>> pair) {
+            clearAllListData();
             loadDataToList(pair);
             super.onPostExecute(pair);
         }

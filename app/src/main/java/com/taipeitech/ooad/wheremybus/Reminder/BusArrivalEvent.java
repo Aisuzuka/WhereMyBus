@@ -17,7 +17,7 @@ import java.util.TimerTask;
  */
 
 public class BusArrivalEvent {
-    private BusEstimateTime timeTable;
+    private BusEstimateTime timeTable = null;
 
     private int isGoDistance;
     private int notificationTime;
@@ -25,6 +25,28 @@ public class BusArrivalEvent {
     private String targetBusRoute;
     private String targetBusStation;
     private long id;
+
+    private void createTimeTable() throws IOException {
+        if (timeTable != null) return;
+        BusTable busTable = BusTable.getBusTable();
+        BusStation busStation = busTable.getStationByName(targetBusStation);
+        BusRoute busRoute = busTable.getRouteByName(targetBusRoute);
+        if (busStation == null || busRoute == null) {
+
+        } else {
+            BusEstimateTime busEstimateTime;
+            if (isGoDistance == 1)
+                busEstimateTime = busRoute.getGoEstimateTimeByStation(busStation);
+            else
+                busEstimateTime = busRoute.getBackEstimateTimeByStation(busStation);
+
+            if (busEstimateTime == null) {
+            } else {
+                this.timeTable = busEstimateTime;
+            }
+        }
+    }
+
     public long getReferenceTime() {
         return referenceTime;
     }
@@ -44,7 +66,6 @@ public class BusArrivalEvent {
     }
 
     private int eventId;
-    private GetBusEstimateTime getBusEstimateTime;
 
     public BusArrivalEvent() {
         eventId = new Random().nextInt();
@@ -63,6 +84,10 @@ public class BusArrivalEvent {
         return notificationTime;
     }
 
+    public String getDestination() {
+        return timeTable.busRoute.destination;
+    }
+
     public BusArrivalEvent setNotificationTime(int notificationTime) {
         this.notificationTime = notificationTime;
         return this;
@@ -76,9 +101,9 @@ public class BusArrivalEvent {
         watcher.schedule(new TimerTask() {
             @Override
             public void run() {
-                new GetBusEstimateTime().execute(timeTable);
+                new GetBusEstimateTime().execute();
             }
-        }, 0, 5000);
+        }, 0, 30000);
     }
 
     public void stopWatch() {
@@ -115,31 +140,47 @@ public class BusArrivalEvent {
         this.id = id;
     }
 
-    private class GetBusEstimateTime extends AsyncTask<BusEstimateTime, BusEstimateTime, BusEstimateTime> {
+    private class GetBusEstimateTime extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected BusEstimateTime doInBackground(BusEstimateTime... params) {
+        protected Void doInBackground(Void... params) {
             try {
-                params[0].updateTime();
+                if (timeTable == null)
+                    try {
+                        createTimeTable();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                timeTable.updateTime();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return params[0];
+            return null;
         }
 
         @Override
-        protected void onPostExecute(BusEstimateTime timeTable) {
+        protected void onPostExecute(Void aVoid) {
             analysisEstimateTime(timeTable);
-            super.onPostExecute(timeTable);
+            super.onPostExecute(aVoid);
         }
     }
 
     private void analysisEstimateTime(BusEstimateTime timeTable) {
-        if (System.currentTimeMillis() >= referenceTime) {
-            if (Integer.valueOf(timeTable.estimateTime) >= 0 && Integer.valueOf(timeTable.estimateTime) <= notificationTime * 60) {
+        if (isReferenceTimeNow()) {
+            if (isBusApproach(timeTable)) {
                 busArriveListener.busArrived(this);
             }
         }
+    }
+
+    private boolean isReferenceTimeNow() {
+        return System.currentTimeMillis() >= referenceTime;
+    }
+
+    private boolean isBusApproach(BusEstimateTime timeTable) {
+        int estimateTime = Integer.valueOf(timeTable.estimateTime);
+        int notificationTime_second = notificationTime * 60;
+        return estimateTime >= notificationTime_second && estimateTime <= notificationTime_second + 60 ? true : false;
     }
 
 }

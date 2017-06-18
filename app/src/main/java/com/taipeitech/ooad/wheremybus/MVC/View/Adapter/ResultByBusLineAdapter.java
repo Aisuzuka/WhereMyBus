@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
-import com.taipeitech.ooad.wheremybus.MVC.Model.Station;
 import com.taipeitech.ooad.wheremybus.R;
 
 import java.util.ArrayList;
@@ -40,11 +39,11 @@ public class ResultByBusLineAdapter extends ArrayAdapter<BusEstimateTime> {
         }
         viewHolder.station = (TextView) convertView.findViewById(R.id.station);
         viewHolder.estimeTime = (TextView) convertView.findViewById(R.id.estimeTime);
-        setContext(position);
+        setContent(position);
         return convertView;
     }
 
-    private void setContext(int position) {
+    private void setContent(int position) {
         viewHolder.station.setText(station.get(position).busStation.busStationName);
         int time = Integer.parseInt(station.get(position).estimateTime);
         if(time >= 0){

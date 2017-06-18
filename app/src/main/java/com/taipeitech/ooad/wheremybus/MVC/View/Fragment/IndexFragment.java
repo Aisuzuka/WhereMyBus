@@ -51,10 +51,10 @@ public class IndexFragment extends Fragment {
                         fragment = new SearchByStationFragment();
                         break;
                     case R.id.NearStationButton:
-                        fragment = new NearStationFragment();
+                        fragment = new FavoriteRouteFragment();
                         break;
                     case R.id.alarmListButton:
-                        fragment = new AlarmListFragment();
+                        fragment = new EventListFragment();
                         break;
                 }
                 changeView(fragment);

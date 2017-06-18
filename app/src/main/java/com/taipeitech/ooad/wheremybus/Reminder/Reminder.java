@@ -41,13 +41,16 @@ public class Reminder extends Service {
         return reminder;
     }
 
-    public void addEventFromDataBase(BusArrivalEvent busArrivalEvent) {
-       List<BusArrivalEvent> busArrivalEventList = dataBase.getAll();
-        for(int i=0;i<busArrivalEventList.size();i++){
+    public void addEventFromDataBase() {
+        BusArrivalEvent busArrivalEvent;
+        List<BusArrivalEvent> busArrivalEventList = dataBase.getAll();
+        for (int i = 0; i < busArrivalEventList.size(); i++) {
             busArrivalEventList.get(i).setBusArriveListener(setOnBusArriveListener);
             busArrivalEventList.get(i).startWatch();
+            busArrivalEvent = busArrivalEventList.get(i);
+            this.busArrivalEventList.add(busArrivalEvent);
         }
-        this.busArrivalEventList.add(busArrivalEvent);
+
     }
 
     public void addEvent(BusArrivalEvent busArrivalEvent) {
@@ -74,6 +77,7 @@ public class Reminder extends Service {
         setOnBusArriveListener = new SetOnBusArriveListener();
         reminder = this;
         dataBase = new DataBase(this);
+        addEventFromDataBase();
         super.onCreate();
     }
 
@@ -98,17 +102,17 @@ public class Reminder extends Service {
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setLights(Color.GREEN, 1000, 1000)
-                .setVibrate(new long[] {1000, 500, 1000, 400, 1000, 300, 1000, 200, 1000, 100})
+                .setVibrate(new long[]{1000, 500, 1000, 400, 1000, 300, 1000, 200, 1000, 100})
                 .build();
 
-        notificationManager.notify(busArrivalEvent.getEventId(),notification);
+        notificationManager.notify(busArrivalEvent.getEventId(), notification);
     }
 
     public class SetOnBusArriveListener implements BusArriveListener {
         @Override
         public void busArrived(final BusArrivalEvent busArrivalEvent) {
             showNotification(busArrivalEvent);
-            busArrivalEvent.stopWatch();
+            deleteEvent(busArrivalEvent);
         }
     }
 }

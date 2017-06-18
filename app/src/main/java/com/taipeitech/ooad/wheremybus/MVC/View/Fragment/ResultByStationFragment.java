@@ -94,7 +94,6 @@ public class ResultByStationFragment extends Fragment {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                clearAllListData();
                 new getBusEstimateTimeByRoute().execute(station);
             }
         }, 0, 30000);
@@ -277,6 +276,7 @@ public class ResultByStationFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Pair<List<BusEstimateTime>,List<BusEstimateTime>> pair) {
+            clearAllListData();
             loadDataToList(pair);
         }
     }

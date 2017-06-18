@@ -39,7 +39,7 @@ public class BusTable {
         GetStop getStop = (GetStop)downloadObjectFromURLStop.downloadObject();
 
         long endTime = System.nanoTime();
-        Log.d("TimeStreamJackson",String.valueOf(-startTime+endTime));
+//        Log.d("TimeStreamJackson",String.valueOf(-startTime+endTime));
 
         busTable =new BusTable();
         List<BusRoute> busRouteList = busTable.busRouteList;
@@ -64,7 +64,7 @@ public class BusTable {
                 busRoute.busStationBackList=new ArrayList<>();
                 busRouteList.add(busRoute);
                 busRouteMap.put(busRoute.routeId,busRoute);
-                Log.d("busRoute",busRoute.busRouteName+"    "+busRoute.routeId+"     "+busRoute.departure+"       "+busRoute.destination);
+//                Log.d("busRoute",busRoute.busRouteName+"    "+busRoute.routeId+"     "+busRoute.departure+"       "+busRoute.destination);
             }
         }
 
@@ -86,7 +86,7 @@ public class BusTable {
                 busStation.busRouteBackList =new ArrayList<>();
                 busStationList.add(busStation);
                 busStationMap.put(busStation.busStationName,busStation);
-                Log.d("busStation",busStation.busStationName+"    "+busStation.locationId+"     "+busStation.address+"       "+busStation.lat+"     "+busStation.lon);
+//                Log.d("busStation",busStation.busStationName+"    "+busStation.locationId+"     "+busStation.address+"       "+busStation.lat+"     "+busStation.lon);
             }
         }
 
@@ -109,7 +109,7 @@ public class BusTable {
                 stationSequenceList.add(new Pair<BusStation, Pair<Integer,Integer>>(busStationMap.get(stationInfo[i].nameZh),new Pair<Integer,Integer>(stationInfo[i].seqNo,stationInfo[i].Id)));
             }
             else{
-                Log.d("??????",stationInfo[i].goBack +"       "+stationInfo[i].nameZh+ "        "+stationInfo[i].seqNo+"      "+stationInfo[i].routeId);
+//                Log.d("??????",stationInfo[i].goBack +"       "+stationInfo[i].nameZh+ "        "+stationInfo[i].seqNo+"      "+stationInfo[i].routeId);
             }
         }
 
@@ -193,7 +193,7 @@ public class BusTable {
 
         }
         for (int i=0;i<result.size();i++){
-            Log.d("searchResult",result.get(i).busRouteName);
+//            Log.d("searchResult",result.get(i).busRouteName);
         }
         return result;
     }
@@ -223,7 +223,7 @@ public class BusTable {
 
         }
         for (int i=0;i<result.size();i++){
-            Log.d("searchResult",result.get(i).busStationName);
+//            Log.d("searchResult",result.get(i).busStationName);
         }
         return result;
     }

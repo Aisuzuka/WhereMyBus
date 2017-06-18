@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,34 +43,25 @@ public class MainActivity extends AppCompatActivity {
 
     private static Context context;
 
-    public class MyThreadTask extends Thread {
-        public void run() {
+    public class MyThreadTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
             try {
-                BusTable busTable = BusTable.createBustable();
-                List<BusRoute> busRouteList = busTable.searchRouteByName("299");
-                busRouteList.get(1).getEstimateTime();
-                List<BusStation> busStationList = busTable.searchStationByName("中華路口");
-                busStationList.get(0).getEstimateTime();
-
-                BusRoute busRoute = busRouteList.get(1);
-                BusStation busStation = busRoute.getBusRouteGoList().get(0);
-//                Reminder reminder =new Reminder(context);
-//                Event event =new Event();
-//                event.setGoBack(0);
-//                event.setTimeEndHour(5);
-//                event.setTimeEndMinite(30);
-//                event.setTimeStartHour(4);
-//                event.setTimeStartMinite(30);
-//                event.setBusRuteName(busRoute.busRouteName);
-//                event.setBusStationName(busStation.busStationName);
-//                reminder.addEvent(event);
-//
-//                List<Event> eventList=reminder.getAllEvent();
-//               Log.d("alarm", eventList.get(0).getBusEstimateTime().busRoute.busRouteName+eventList.get(0).getBusEstimateTime().busStation.busStationName+eventList.get(0).getBusEstimateTime().estimateTime);
-//                Log.d("alarm", eventList.get(0).getBusRuteName()+busRoute.busRouteName);
+                BusTable.createBustable();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (!Reminder.isAlive()) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, Reminder.class);
+                MainActivity.getContext().startService(intent);
+            }
+            super.onPostExecute(aVoid);
         }
     }
 
@@ -89,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
 
         MyThreadTask myThreadTask = new MyThreadTask();
-        myThreadTask.start();
+        myThreadTask.execute();
 
 
 //        Handler handler =new Handler(){
@@ -114,10 +106,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         context = this;
-        if (!Reminder.isAlive()) {
-            Intent intent = new Intent();
-            intent.setClass(MainActivity.this, Reminder.class);
-            this.startService(intent);
-        }
     }
 }
