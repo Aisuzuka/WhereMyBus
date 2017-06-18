@@ -38,7 +38,7 @@ public class ResultByStationAdapter extends ArrayAdapter<BusEstimateTime> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.route = (TextView) convertView.findViewById(R.id.station);
+        viewHolder.route = (TextView) convertView.findViewById(R.id.busRoute);
         viewHolder.estimeTime = (TextView) convertView.findViewById(R.id.estimeTime);
         setContext(position);
         return convertView;

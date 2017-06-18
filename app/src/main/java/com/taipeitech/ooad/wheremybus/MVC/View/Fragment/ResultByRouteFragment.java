@@ -25,6 +25,7 @@ import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
 import com.taipeitech.ooad.wheremybus.MVC.Controller.MainActivity;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
+import com.taipeitech.ooad.wheremybus.MVC.Model.FrequenceCounter;
 import com.taipeitech.ooad.wheremybus.MVC.View.Adapter.ResultByBusLineAdapter;
 import com.taipeitech.ooad.wheremybus.R;
 import com.taipeitech.ooad.wheremybus.Reminder.BusArrivalEvent;
@@ -95,6 +96,7 @@ public class ResultByRouteFragment extends Fragment {
     }
 
     private void startWatchBusStatus() {
+        new FrequenceCounter(MainActivity.getContext()).addBusRoute(route);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

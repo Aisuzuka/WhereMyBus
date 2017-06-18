@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     // 資料庫名稱
-    public static final String DATABASE_NAME = "bus_alarm_t1.db";
+    public static final String DATABASE_NAME = "bus_alarm_t2.db";
     public static final int VERSION = 1;
     private static SQLiteDatabase database;
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,
