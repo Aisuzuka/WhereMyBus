@@ -235,7 +235,7 @@ public class ResultByRouteFragment extends Fragment {
                                     .setTargetBusRoute(selectBusEstimateTime.busRoute.busRouteName)
                                     .setTargetBusStation(selectBusEstimateTime.busStation.busStationName)
                                     .setTimeTable(selectBusEstimateTime));
-                            Toast.makeText(MainActivity.getContext(), "已加入到ㄓ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.getContext(), "已加入到站提醒", Toast.LENGTH_LONG).show();
                             dialog.cancel();
                         } else {
                             Toast.makeText(MainActivity.getContext(), "時間及到站提醒不得為空", Toast.LENGTH_LONG).show();

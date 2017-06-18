@@ -7,7 +7,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -43,7 +42,7 @@ public class Reminder extends Service {
 
     public void addEventFromDataBase() {
         BusArrivalEvent busArrivalEvent;
-        List<BusArrivalEvent> busArrivalEventList = dataBase.getAll();
+        List<BusArrivalEvent> busArrivalEventList = dataBase.getAllArriveEvent();
         for (int i = 0; i < busArrivalEventList.size(); i++) {
             busArrivalEventList.get(i).setBusArriveListener(setOnBusArriveListener);
             busArrivalEventList.get(i).startWatch();
@@ -55,7 +54,7 @@ public class Reminder extends Service {
 
     public void addEvent(BusArrivalEvent busArrivalEvent) {
         Log.e("Service", "add an Event");
-        dataBase.insertBusArrivalEvent(busArrivalEvent);
+        dataBase.insertBusArriveEvent(busArrivalEvent);
         busArrivalEvent.setBusArriveListener(setOnBusArriveListener);
         busArrivalEvent.startWatch();
         busArrivalEventList.add(busArrivalEvent);
@@ -66,7 +65,7 @@ public class Reminder extends Service {
     }
 
     public void deleteEvent(BusArrivalEvent busArrivalEvent) {
-        dataBase.delete(busArrivalEvent.getId());
+        dataBase.deleteBusArrivaEvent(busArrivalEvent.getId());
         busArrivalEventList.remove(busArrivalEvent);
         busArrivalEvent.stopWatch();
     }

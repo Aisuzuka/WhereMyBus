@@ -21,6 +21,7 @@ public class ResultByBusLineAdapter extends ArrayAdapter<BusEstimateTime> {
     ArrayList<BusEstimateTime> station;
     LayoutInflater myInflater;
     ViewHolder viewHolder;
+
     public ResultByBusLineAdapter(Context context, int resource, ArrayList<BusEstimateTime> station) {
         super(context, resource, station);
         this.station = station;
@@ -30,8 +31,8 @@ public class ResultByBusLineAdapter extends ArrayAdapter<BusEstimateTime> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null){
-            convertView = myInflater.inflate(R.layout.station_item , null);
+        if (convertView == null) {
+            convertView = myInflater.inflate(R.layout.station_item, null);
             viewHolder = new ViewHolder();
             convertView.setTag(viewHolder);
         } else {
@@ -46,18 +47,22 @@ public class ResultByBusLineAdapter extends ArrayAdapter<BusEstimateTime> {
     private void setContent(int position) {
         viewHolder.station.setText(station.get(position).busStation.busStationName);
         int time = Integer.parseInt(station.get(position).estimateTime);
-        if(time >= 0){
-            viewHolder.estimeTime.setText("預估" + Integer.toString((time / 60) + 1) + "分鐘後到站");
-        } else if (time == -1){
-            viewHolder.estimeTime.setText("尚未發車");
-        } else if (time == -3){
-            viewHolder.estimeTime.setText("末班車已過");
-        } else if (time < 60) {
-            viewHolder.estimeTime.setText("即將到站");
+        String string;
+        if (time < 0) {
+            if (time == -3)
+                string = "末班車已過";
+            else
+                string = "尚未發車";
+        } else {
+            if (time < 60)
+                string = "即將到站";
+            else
+                string = "預估" + Integer.toString((time / 60) + 1) + "分鐘後到站";
         }
+        viewHolder.estimeTime.setText(string);
     }
 
-    public class ViewHolder{
+    public class ViewHolder {
         TextView station;
         TextView estimeTime;
     }

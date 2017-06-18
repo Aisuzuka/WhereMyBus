@@ -52,7 +52,7 @@ public class DataBase {
         db.close();
     }
 
-    public BusArrivalEvent insertBusArrivalEvent(BusArrivalEvent event) {
+    public BusArrivalEvent insertBusArriveEvent(BusArrivalEvent event) {
         ContentValues cv = new ContentValues();
 
         cv.put(GOBACK_COLUMN, event.isGoDistance());
@@ -68,7 +68,7 @@ public class DataBase {
     }
 
     // 修改參數指定的物件
-    public boolean update(BusArrivalEvent event) {
+    public boolean updateBusArriveEvent(BusArrivalEvent event) {
         ContentValues cv = new ContentValues();
 
         cv.put(GOBACK_COLUMN, event.isGoDistance());
@@ -80,19 +80,19 @@ public class DataBase {
         return db.update(TABLE_NAME, cv, where, null) > 0;
     }
 
-    public boolean delete(long id){
+    public boolean deleteBusArrivaEvent(long id){
         String where = KEY_ID + "=" + id;
         return db.delete(TABLE_NAME, where , null) > 0;
     }
 
     // 讀取所有記事資料
-    public List<BusArrivalEvent> getAll() {
+    public List<BusArrivalEvent> getAllArriveEvent() {
         List<BusArrivalEvent> result = new ArrayList<>();
         Cursor cursor = db.query(
                 TABLE_NAME, null, null, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-            result.add(getRecord(cursor));
+            result.add(getBusArriveEvent(cursor));
         }
 
         cursor.close();
@@ -112,7 +112,7 @@ public class DataBase {
         // 如果有查詢結果
         if (result.moveToFirst()) {
             // 讀取包裝一筆資料的物件
-            event = getRecord(result);
+            event = getBusArriveEvent(result);
         }
 
         // 關閉Cursor物件
@@ -122,7 +122,7 @@ public class DataBase {
     }
 
     // 把Cursor目前的資料包裝為物件
-    public BusArrivalEvent getRecord(Cursor cursor) {
+    public BusArrivalEvent getBusArriveEvent(Cursor cursor) {
         // 準備回傳結果用的物件
         BusArrivalEvent result = new BusArrivalEvent();
 
@@ -153,7 +153,7 @@ public class DataBase {
 
 
 
-    public FrequenceRoute insterBusRoute(FrequenceRoute frequenceRoute){
+    public FrequenceRoute insertFrequenceRoute(FrequenceRoute frequenceRoute){
         ContentValues cv = new ContentValues();
 
         cv.put(COUNT_COLUMN, frequenceRoute.getCount());
@@ -164,7 +164,7 @@ public class DataBase {
         frequenceRoute.setId(id);
         return  frequenceRoute;
     }
-    public boolean updateBusRoute(FrequenceRoute frequenceRoute){
+    public boolean updateFrequenceRoute(FrequenceRoute frequenceRoute){
         ContentValues cv = new ContentValues();
 
         cv.put(COUNT_COLUMN, frequenceRoute.getCount());
@@ -180,14 +180,14 @@ public class DataBase {
                 TABLE_NAME_FREQUENCE, null, null, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-            result.add(getRecordFrequenceRoute(cursor));
+            result.add(getFrequenceRoute(cursor));
         }
 
         cursor.close();
         return result;
     }
 
-    public FrequenceRoute getRecordFrequenceRoute(Cursor cursor) {
+    public FrequenceRoute getFrequenceRoute(Cursor cursor) {
         // 準備回傳結果用的物件
         FrequenceRoute result = new FrequenceRoute();
 

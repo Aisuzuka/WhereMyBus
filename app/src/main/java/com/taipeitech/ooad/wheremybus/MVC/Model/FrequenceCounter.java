@@ -31,14 +31,14 @@ public class FrequenceCounter {
             if(frequenceRouteList.get(i).getBusRouteName().equals( busRoute.busRouteName)){
                 frequenceRoute =frequenceRouteList.get(i);
                 frequenceRoute.addCount();
-                dataBase.updateBusRoute( frequenceRoute);
+                dataBase.updateFrequenceRoute( frequenceRoute);
             }
         }
         if( frequenceRoute ==null){
             frequenceRoute =new FrequenceRoute();
             frequenceRoute.addCount();
             frequenceRoute.setBusRouteName(busRoute.busRouteName);
-            dataBase.updateBusRoute(frequenceRoute);
+            dataBase.insertFrequenceRoute(frequenceRoute);
             frequenceRouteList.add(frequenceRoute);
         }
 

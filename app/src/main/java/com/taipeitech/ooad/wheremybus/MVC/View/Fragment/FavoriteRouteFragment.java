@@ -1,11 +1,14 @@
 package com.taipeitech.ooad.wheremybus.MVC.View.Fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +30,7 @@ public class FavoriteRouteFragment extends Fragment {
     ArrayAdapter<String> listAdapter;
     ArrayList<BusRoute> favoriteRoute;
     ArrayList<String> stringList;
+    private ResultByRouteFragment fragment;
 
 
     @Nullable
@@ -40,6 +44,14 @@ public class FavoriteRouteFragment extends Fragment {
         listAdapter = new ArrayAdapter(MainActivity.getContext(), android.R.layout.simple_list_item_1, stringList);
         listView.setAdapter(listAdapter);
         listAdapter.notifyDataSetChanged();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BusRoute busRoute = favoriteRoute.get(position);
+                initFragment(busRoute);
+                changeView();
+            }
+        });
         return view;
     }
 
@@ -51,5 +63,24 @@ public class FavoriteRouteFragment extends Fragment {
             stringList.add(favoriteRoute.get(i).busRouteName);
         }
         super.onCreate(savedInstanceState);
+    }
+
+    private void initFragment(BusRoute busRoute) {
+        fragment = new ResultByRouteFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("busRouteName", busRoute.busRouteName);
+        bundle.putString("departure", busRoute.departure);
+        bundle.putString("destination", busRoute.destination);
+        bundle.putInt("routeId", busRoute.routeId);
+        fragment.setArguments(bundle);
+    }
+
+    public void changeView() {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.fragment, fragment);
+        ft.addToBackStack("");
+        ft.commit();
     }
 }

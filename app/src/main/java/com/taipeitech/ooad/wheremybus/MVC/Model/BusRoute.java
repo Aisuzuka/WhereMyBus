@@ -60,6 +60,13 @@ public class BusRoute {
         for (int i =0 ;i<busInfo.length;i++){
             BusEstimateTime busEstimateTime = mirrorTable.get(busInfo[i].StopID);
             if (busEstimateTime != null){
+                try {
+                    int value =Integer.valueOf(busInfo[i].EstimateTime);
+                }
+                catch (NumberFormatException e){
+                    busInfo[i].EstimateTime ="-4";
+                }
+
                 busEstimateTime.estimateTime=busInfo[i].EstimateTime;
             }
 
