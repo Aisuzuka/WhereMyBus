@@ -1,43 +1,70 @@
 package com.taipeitech.ooad.wheremybus.MVC.Controller;
 
+import android.accessibilityservice.AccessibilityService;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.content.Context;
-
+import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
 
-import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
+
 import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
+
+
 import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
+import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static Context context;
-    public  class  MyThreadTask extends Thread
-    {
-        public void run()
-        {
+
+    public class MyThreadTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
             try {
-                BusTable busTable = BusTable.createBustable();
-                List<BusRoute> busRouteList = busTable.searchRouteByName("299");
-                busRouteList.get(1).getEstimateTime();
-                List<BusStation> busStationList = busTable.searchStationByName("中華路口");
-                busStationList.get(0).getEstimateTime();
+                BusTable.createBustable();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (!Reminder.isAlive()) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, Reminder.class);
+                MainActivity.getContext().startService(intent);
+            }
+            super.onPostExecute(aVoid);
         }
     }
+
     public static Context getContext() {
         return context;
     }
@@ -53,9 +80,8 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.fragment, indexFragment);
         ft.commit();
 
-        MyThreadTask myThreadTask =new MyThreadTask();
-        myThreadTask.start();
-
+        MyThreadTask myThreadTask = new MyThreadTask();
+        myThreadTask.execute();
 
 
 //        Handler handler =new Handler(){
@@ -80,10 +106,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         context = this;
-        if(!Reminder.isAlive()) {
-            Intent intent = new Intent();
-            intent.setClass(MainActivity.this, Reminder.class);
-            this.startService(intent);
-        }
     }
 }
