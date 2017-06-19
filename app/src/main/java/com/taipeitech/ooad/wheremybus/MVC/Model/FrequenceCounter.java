@@ -38,7 +38,7 @@ public class FrequenceCounter {
             frequenceRoute =new FrequenceRoute();
             frequenceRoute.addCount();
             frequenceRoute.setBusRouteName(busRoute.busRouteName);
-            dataBase.updateBusRoute(frequenceRoute);
+            dataBase.insterBusRoute(frequenceRoute);
             frequenceRouteList.add(frequenceRoute);
         }
 

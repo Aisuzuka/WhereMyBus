@@ -174,6 +174,11 @@ public class DataBase {
         return db.update(TABLE_NAME_FREQUENCE, cv, where, null) > 0;
     }
 
+    public boolean deleteBusRoute(FrequenceRoute frequenceRoute){
+        String where = KEY_ID_FREUENCE + "=" + frequenceRoute.getId();
+        return db.delete(TABLE_NAME_FREQUENCE, where , null) > 0;
+    }
+
     public List<FrequenceRoute> getAllFrequenceRoute() {
         List<FrequenceRoute> result = new ArrayList<>();
         Cursor cursor = db.query(

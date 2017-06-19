@@ -32,8 +32,8 @@ public class BusTable {
         if(busTable!= null)return busTable;
         long startTime = System.nanoTime();
 
-        DownloadObjectFromURL downloadObjectFromURLRoute =new DownloadObjectFromURL(GetRoute.class,"http://data.taipei/bus/ROUTE");
-        DownloadObjectFromURL downloadObjectFromURLStop =new DownloadObjectFromURL(GetStop.class,"http://data.taipei/bus/Stop");
+        DownloadObjectFromURL downloadObjectFromURLRoute =new DownloadObjectFromURL(GetRoute.class,BusURL.ROUTE_URL);
+        DownloadObjectFromURL downloadObjectFromURLStop =new DownloadObjectFromURL(GetStop.class,BusURL.STOP_URL);
 
         GetRoute getRoute = (GetRoute) downloadObjectFromURLRoute.downloadObject();
         GetStop getStop = (GetStop)downloadObjectFromURLStop.downloadObject();

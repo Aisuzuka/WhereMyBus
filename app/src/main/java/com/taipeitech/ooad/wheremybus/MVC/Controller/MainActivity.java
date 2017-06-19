@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 
 
 import com.taipeitech.ooad.wheremybus.BusInfo.BusTable;
+import com.taipeitech.ooad.wheremybus.BusInfo.BusURL;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 
@@ -30,7 +31,7 @@ import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 import com.taipeitech.ooad.wheremybus.MVC.View.Fragment.IndexFragment;
 import com.taipeitech.ooad.wheremybus.R;
 import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
-
+import com.taipeitech.ooad.wheremybus.BusInfo.BusURL;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,6 +43,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static Context context;
+
+
 
     public class MyThreadTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -80,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.fragment, indexFragment);
         ft.commit();
 
+        BusURL.ESTIMATE_TIME_URL ="http://192.168.0.102:8080/GetEstimateTime.gz";
+        BusURL.ROUTE_URL="http://192.168.0.102:8080/GetBUSDATA.gz";
+        BusURL.STOP_URL="http://192.168.0.102:8080/GetSTOP.gz";
         MyThreadTask myThreadTask = new MyThreadTask();
         myThreadTask.execute();
 

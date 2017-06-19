@@ -37,6 +37,8 @@ public class DownloadObjectFromURL {
             do{
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
+               // conn.setDoInput(true);
+                conn.setDoOutput(false);
                 responseCode =conn.getResponseCode();
                 if(responseCode<200||responseCode>299){
                     String newUrl =  conn.getHeaderField("Location");
@@ -45,7 +47,8 @@ public class DownloadObjectFromURL {
                     url = new URL(newUrl);
                 }
             }while (responseCode<200||responseCode>299);
-            InputStream instream =url.openStream();
+          // InputStream instream =url.openStream();
+            InputStream instream= conn.getInputStream();
             GZIPInputStream gzis = new GZIPInputStream(instream);
             return objectReader.readValue(gzis);
 

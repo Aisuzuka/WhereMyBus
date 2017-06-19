@@ -5,6 +5,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.taipeitech.ooad.wheremybus.BusInfo.BusInformationController;
+import com.taipeitech.ooad.wheremybus.BusInfo.BusURL;
 import com.taipeitech.ooad.wheremybus.BusInfo.GetEstimateTime;
 import com.taipeitech.ooad.wheremybus.Tool.DownloadObjectFromURL;
 
@@ -57,7 +58,7 @@ public class BusStation {
                 mirrorTable.put(backStopId.get(i),busEstimateTime);
             }
         }
-        DownloadObjectFromURL downloadObjectFromURL =new DownloadObjectFromURL(GetEstimateTime.class,"http://data.taipei/bus/EstimateTime");
+        DownloadObjectFromURL downloadObjectFromURL =new DownloadObjectFromURL(GetEstimateTime.class, BusURL.ESTIMATE_TIME_URL);
         GetEstimateTime getEstimateTime = (GetEstimateTime)downloadObjectFromURL.downloadObject();
         GetEstimateTime.BusInfo busInfo[] = getEstimateTime.BusInfo;
         for (int i =0 ;i<busInfo.length;i++){
