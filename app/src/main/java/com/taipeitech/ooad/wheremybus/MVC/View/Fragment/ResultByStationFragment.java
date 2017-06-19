@@ -7,7 +7,6 @@ import android.app.TimePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -28,7 +27,7 @@ import com.taipeitech.ooad.wheremybus.MVC.Model.BusEstimateTime;
 import com.taipeitech.ooad.wheremybus.MVC.Model.BusStation;
 import com.taipeitech.ooad.wheremybus.MVC.View.Adapter.ResultByStationAdapter;
 import com.taipeitech.ooad.wheremybus.R;
-import com.taipeitech.ooad.wheremybus.Reminder.BusArrivalEvent;
+import com.taipeitech.ooad.wheremybus.Reminder.BusArriveEvent;
 import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 
 import java.io.IOException;
@@ -232,7 +231,7 @@ public class ResultByStationFragment extends Fragment {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            Reminder.getReminder().addEvent(new BusArrivalEvent()
+                            Reminder.getReminder().addEvent(new BusArriveEvent()
                                     .setGoDistance(isGoDistance ? 1 : 0)
                                     .setReferenceTime(referenceTime.getTimeInMillis())
                                     .setNotificationTime(Integer.valueOf(notificationTime.getText().toString()))

@@ -5,5 +5,5 @@ package com.taipeitech.ooad.wheremybus.Reminder;
  */
 
 public interface BusArriveListener {
-    void busArrived(BusArrivalEvent busArrivalEvent);
+    void busArrived(BusArriveEvent busArriveEvent);
 }

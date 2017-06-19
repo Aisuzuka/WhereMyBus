@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.taipeitech.ooad.wheremybus.Reminder.BusArrivalEvent;
+import com.taipeitech.ooad.wheremybus.Reminder.BusArriveEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class DataBase {
         db.close();
     }
 
-    public BusArrivalEvent insertBusArriveEvent(BusArrivalEvent event) {
+    public BusArriveEvent insertBusArriveEvent(BusArriveEvent event) {
         ContentValues cv = new ContentValues();
 
         cv.put(GOBACK_COLUMN, event.isGoDistance());
@@ -68,7 +68,7 @@ public class DataBase {
     }
 
     // 修改參數指定的物件
-    public boolean updateBusArriveEvent(BusArrivalEvent event) {
+    public boolean updateBusArriveEvent(BusArriveEvent event) {
         ContentValues cv = new ContentValues();
 
         cv.put(GOBACK_COLUMN, event.isGoDistance());
@@ -86,8 +86,8 @@ public class DataBase {
     }
 
     // 讀取所有記事資料
-    public List<BusArrivalEvent> getAllArriveEvent() {
-        List<BusArrivalEvent> result = new ArrayList<>();
+    public List<BusArriveEvent> getAllArriveEvent() {
+        List<BusArriveEvent> result = new ArrayList<>();
         Cursor cursor = db.query(
                 TABLE_NAME, null, null, null, null, null, null, null);
 
@@ -100,9 +100,9 @@ public class DataBase {
     }
 
     // 取得指定編號的資料物件
-    public BusArrivalEvent get(long id) {
+    public BusArriveEvent get(long id) {
         // 準備回傳結果用的物件
-        BusArrivalEvent event = null;
+        BusArriveEvent event = null;
         // 使用編號為查詢條件
         String where = KEY_ID + "=" + id;
         // 執行查詢
@@ -122,9 +122,9 @@ public class DataBase {
     }
 
     // 把Cursor目前的資料包裝為物件
-    public BusArrivalEvent getBusArriveEvent(Cursor cursor) {
+    public BusArriveEvent getBusArriveEvent(Cursor cursor) {
         // 準備回傳結果用的物件
-        BusArrivalEvent result = new BusArrivalEvent();
+        BusArriveEvent result = new BusArriveEvent();
 
         result.setId(cursor.getLong(0));
 

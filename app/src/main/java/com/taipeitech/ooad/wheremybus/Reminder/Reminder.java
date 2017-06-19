@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 public class Reminder extends Service {
-    private ArrayList<BusArrivalEvent> busArrivalEventList = new ArrayList<>();
+    private ArrayList<BusArriveEvent> busArriveEventList = new ArrayList<>();
     private DataBase dataBase;
     SetOnBusArriveListener setOnBusArriveListener;
 
@@ -41,33 +41,33 @@ public class Reminder extends Service {
     }
 
     public void addEventFromDataBase() {
-        BusArrivalEvent busArrivalEvent;
-        List<BusArrivalEvent> busArrivalEventList = dataBase.getAllArriveEvent();
-        for (int i = 0; i < busArrivalEventList.size(); i++) {
-            busArrivalEventList.get(i).setBusArriveListener(setOnBusArriveListener);
-            busArrivalEventList.get(i).startWatch();
-            busArrivalEvent = busArrivalEventList.get(i);
-            this.busArrivalEventList.add(busArrivalEvent);
+        BusArriveEvent busArriveEvent;
+        List<BusArriveEvent> busArriveEventList = dataBase.getAllArriveEvent();
+        for (int i = 0; i < busArriveEventList.size(); i++) {
+            busArriveEventList.get(i).setBusArriveListener(setOnBusArriveListener);
+            busArriveEventList.get(i).startWatch();
+            busArriveEvent = busArriveEventList.get(i);
+            this.busArriveEventList.add(busArriveEvent);
         }
 
     }
 
-    public void addEvent(BusArrivalEvent busArrivalEvent) {
+    public void addEvent(BusArriveEvent busArriveEvent) {
         Log.e("Service", "add an Event");
-        dataBase.insertBusArriveEvent(busArrivalEvent);
-        busArrivalEvent.setBusArriveListener(setOnBusArriveListener);
-        busArrivalEvent.startWatch();
-        busArrivalEventList.add(busArrivalEvent);
+        dataBase.insertBusArriveEvent(busArriveEvent);
+        busArriveEvent.setBusArriveListener(setOnBusArriveListener);
+        busArriveEvent.startWatch();
+        busArriveEventList.add(busArriveEvent);
     }
 
-    public List<BusArrivalEvent> getAllEvents() {
-        return busArrivalEventList;
+    public List<BusArriveEvent> getAllEvents() {
+        return busArriveEventList;
     }
 
-    public void deleteEvent(BusArrivalEvent busArrivalEvent) {
-        dataBase.deleteBusArrivaEvent(busArrivalEvent.getId());
-        busArrivalEventList.remove(busArrivalEvent);
-        busArrivalEvent.stopWatch();
+    public void deleteEvent(BusArriveEvent busArriveEvent) {
+        dataBase.deleteBusArrivaEvent(busArriveEvent.getId());
+        busArriveEventList.remove(busArriveEvent);
+        busArriveEvent.stopWatch();
     }
 
     @Override
@@ -86,17 +86,17 @@ public class Reminder extends Service {
         return null;
     }
 
-    private void showNotification(BusArrivalEvent busArrivalEvent) {
+    private void showNotification(BusArriveEvent busArriveEvent) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                busArrivalEvent.getEventId(),
+                busArriveEvent.getEventId(),
                 intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         Notification notification = new Notification.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("公車要到站囉")
-                .setContentText("指定的公車路線 " + busArrivalEvent.getTargetBusRoute() + " 已經要到站牌 " + busArrivalEvent.getTargetBusStation())
+                .setContentText("指定的公車路線 " + busArriveEvent.getTargetBusRoute() + " 已經要到站牌 " + busArriveEvent.getTargetBusStation())
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -104,14 +104,14 @@ public class Reminder extends Service {
                 .setVibrate(new long[]{1000, 500, 1000, 400, 1000, 300, 1000, 200, 1000, 100})
                 .build();
 
-        notificationManager.notify(busArrivalEvent.getEventId(), notification);
+        notificationManager.notify(busArriveEvent.getEventId(), notification);
     }
 
     public class SetOnBusArriveListener implements BusArriveListener {
         @Override
-        public void busArrived(final BusArrivalEvent busArrivalEvent) {
-            showNotification(busArrivalEvent);
-            deleteEvent(busArrivalEvent);
+        public void busArrived(final BusArriveEvent busArriveEvent) {
+            showNotification(busArriveEvent);
+            deleteEvent(busArriveEvent);
         }
     }
 }

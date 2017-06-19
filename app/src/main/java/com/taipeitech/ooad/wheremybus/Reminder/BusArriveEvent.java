@@ -16,7 +16,7 @@ import java.util.TimerTask;
  * Created by Pyakuren-Chienhua on 2017/5/4.
  */
 
-public class BusArrivalEvent {
+public class BusArriveEvent {
     private BusEstimateTime timeTable = null;
 
     private int isGoDistance;
@@ -26,7 +26,11 @@ public class BusArrivalEvent {
     private String targetBusStation;
     private long id;
 
-    private void createTimeTable() throws IOException {
+    public BusEstimateTime getTimeTable(){
+        return timeTable;
+    }
+
+    public void createTimeTable() throws IOException {
         if (timeTable != null) return;
         BusTable busTable = BusTable.getBusTable();
         BusStation busStation = busTable.getStationByName(targetBusStation);
@@ -51,12 +55,12 @@ public class BusArrivalEvent {
         return referenceTime;
     }
 
-    public BusArrivalEvent setTimeTable(BusEstimateTime timeTable) {
+    public BusArriveEvent setTimeTable(BusEstimateTime timeTable) {
         this.timeTable = timeTable;
         return this;
     }
 
-    public BusArrivalEvent setReferenceTime(long referenceTime) {
+    public BusArriveEvent setReferenceTime(long referenceTime) {
         this.referenceTime = referenceTime;
         return this;
     }
@@ -67,7 +71,7 @@ public class BusArrivalEvent {
 
     private int eventId;
 
-    public BusArrivalEvent() {
+    public BusArriveEvent() {
         eventId = new Random().nextInt();
     }
 
@@ -75,7 +79,7 @@ public class BusArrivalEvent {
         return isGoDistance;
     }
 
-    public BusArrivalEvent setGoDistance(int goDistance) {
+    public BusArriveEvent setGoDistance(int goDistance) {
         isGoDistance = goDistance;
         return this;
     }
@@ -88,7 +92,7 @@ public class BusArrivalEvent {
         return timeTable.busRoute.destination;
     }
 
-    public BusArrivalEvent setNotificationTime(int notificationTime) {
+    public BusArriveEvent setNotificationTime(int notificationTime) {
         this.notificationTime = notificationTime;
         return this;
     }
@@ -122,12 +126,12 @@ public class BusArrivalEvent {
         return targetBusStation;
     }
 
-    public BusArrivalEvent setTargetBusRoute(String targetBusRoute) {
+    public BusArriveEvent setTargetBusRoute(String targetBusRoute) {
         this.targetBusRoute = targetBusRoute;
         return this;
     }
 
-    public BusArrivalEvent setTargetBusStation(String targetBusStation) {
+    public BusArriveEvent setTargetBusStation(String targetBusStation) {
         this.targetBusStation = targetBusStation;
         return this;
     }

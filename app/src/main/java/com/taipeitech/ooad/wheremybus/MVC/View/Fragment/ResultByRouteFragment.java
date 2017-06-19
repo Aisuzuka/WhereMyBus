@@ -28,7 +28,7 @@ import com.taipeitech.ooad.wheremybus.MVC.Model.BusRoute;
 import com.taipeitech.ooad.wheremybus.MVC.Model.FrequenceCounter;
 import com.taipeitech.ooad.wheremybus.MVC.View.Adapter.ResultByBusLineAdapter;
 import com.taipeitech.ooad.wheremybus.R;
-import com.taipeitech.ooad.wheremybus.Reminder.BusArrivalEvent;
+import com.taipeitech.ooad.wheremybus.Reminder.BusArriveEvent;
 import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 
 import java.io.IOException;
@@ -228,7 +228,7 @@ public class ResultByRouteFragment extends Fragment {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            Reminder.getReminder().addEvent(new BusArrivalEvent()
+                            Reminder.getReminder().addEvent(new BusArriveEvent()
                                     .setGoDistance(isGoDistance ? 1 : 0)
                                     .setReferenceTime(referenceTime.getTimeInMillis())
                                     .setNotificationTime(Integer.valueOf(notificationTime.getText().toString()))

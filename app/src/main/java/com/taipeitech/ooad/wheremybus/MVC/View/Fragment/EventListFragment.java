@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.taipeitech.ooad.wheremybus.MVC.Controller.MainActivity;
 import com.taipeitech.ooad.wheremybus.MVC.View.Adapter.EventListAdapter;
 import com.taipeitech.ooad.wheremybus.R;
-import com.taipeitech.ooad.wheremybus.Reminder.BusArrivalEvent;
+import com.taipeitech.ooad.wheremybus.Reminder.BusArriveEvent;
 import com.taipeitech.ooad.wheremybus.Reminder.Reminder;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 
 public class EventListFragment extends Fragment {
-    private ArrayList<BusArrivalEvent> eventList;
+    private ArrayList<BusArriveEvent> eventList;
     private ListView listView;
     private TextView title;
     private EventListAdapter eventListAdapter;
@@ -37,7 +37,7 @@ public class EventListFragment extends Fragment {
     }
 
     private void loadDataToList() {
-        eventList = (ArrayList<BusArrivalEvent>) Reminder.getReminder().getAllEvents();
+        eventList = (ArrayList<BusArriveEvent>) Reminder.getReminder().getAllEvents();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class EventListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final BusArrivalEvent event = eventList.get((int) id);
+                final BusArriveEvent event = eventList.get((int) id);
                 new AlertDialog.Builder(MainActivity.getContext())
                         .setTitle("刪除提醒")
                         .setMessage("確定要刪除路線" + event.getTargetBusRoute() +"的提醒?")
